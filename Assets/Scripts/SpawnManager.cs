@@ -90,7 +90,7 @@ public class SpawnManager : MonoBehaviour
     {
         msgReceivedCount = 0;
         possibleSpaces.Clear();
-        Debug.Log("Sending messages to scanners");
+        // Debug.Log("Sending messages to scanners");
         if (!msgSent)
         {
             BroadcastMessage("SearchPossibleSpace", SendMessageOptions.DontRequireReceiver);
@@ -100,13 +100,13 @@ public class SpawnManager : MonoBehaviour
 
     public void CollectPossible(Vector3 position)
     {
-        Debug.Log("Received msg from scanner");
+        // Debug.Log("Received msg from scanner");
         msgReceivedCount++;
         if(position != Vector3.back)
         {
             possibleSpaces.Add(position);
         }
-        Debug.Log("Possible spaces - " + possibleSpaces.Count);
+        // Debug.Log("Possible spaces - " + possibleSpaces.Count);
 
         if(msgReceivedCount == transform.childCount)
         {

@@ -5,12 +5,11 @@ using UnityEngine;
 public class Avocado : MonoBehaviour
 {
     public Color color;
-    public bool isExplored;
+    public bool isDropped = false;
 
-    GameObject fallingPoint, phaseManager;
+    GameObject fallingPoint;
     Transform pointCollection;
     Phase phase;
-    bool isDropped = true;
 
     [SerializeField] SpriteRenderer spriteRenderer;
 
@@ -26,7 +25,6 @@ public class Avocado : MonoBehaviour
 
     private void Start()
     {
-        phaseManager = GameObject.Find("PhaseManager");
         pointCollection = GameObject.Find("PointCollection").transform;
 
         fallingPoint = new GameObject("fallingPoint");
@@ -38,7 +36,12 @@ public class Avocado : MonoBehaviour
 
     private void Update()
     {
-        if (phase == Phase.Drop) Drop();
+        if (phase == Phase.Drop) DropControl(gameObject);
+
+        if (isDropped)
+        {
+            spriteRenderer.color = Color.black;
+        }
     }
     private void FixedUpdate()
     {
@@ -52,13 +55,48 @@ public class Avocado : MonoBehaviour
         isDropped = !(phase == Phase.Drop);
     }
 
-    void Drop()
+    public void DropControl(GameObject avo)
+    {
+        int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1f, -layermask);
+
+        if(avo != gameObject && !avo.GetComponent<Avocado>().isDropped)
+        {
+            isDropped = false;
+        }
+
+        switch (hits.Length)
+        {
+            case 0:
+                if (!isDropped)
+                {
+                    PhaseManager.Instance.SendMessage("CountDrop");
+                    isDropped = true;
+                }
+                break;
+            case 1:
+                fallingPoint.transform.position = hits[0].transform.position;
+                break;
+            case 2:
+                foreach(RaycastHit2D hit in hits)
+                {
+                    if(hit.collider.gameObject.layer == 8)
+                    {
+                        hit.collider.SendMessage("DropControl", avo);
+                        isDropped = true;
+                    }
+                }
+                break;
+        }
+    }
+
+    /*
+    void Drop(Vector3 destination)
     {
         if (Vector2.Distance(transform.position, fallingPoint.transform.position) < .5f)
         {
             int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
             RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1f, -layermask);
-            Debug.Log(hits.Length);
         
             if(hits.Length == 1 && !isDropped)
             {
@@ -71,4 +109,5 @@ public class Avocado : MonoBehaviour
             }
         }
     }
+    */
 }

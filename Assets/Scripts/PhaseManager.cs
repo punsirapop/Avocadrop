@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PhaseManager : MonoBehaviour
 
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
+    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay;
 
     int dropCount;
 
@@ -26,21 +28,23 @@ public class PhaseManager : MonoBehaviour
 
     private void Update()
     {
+        currentPhaseDisplay.SetText("Current Phase: " + phase);
+        dropCountDisplay.SetText("Dropped: " + dropCount + "/" + AvoCollection.transform.childCount);
         if(phase == Phase.PlayerAction)
         {
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
-                Environment.rotation = Quaternion.AngleAxis(-90f, Vector3.forward);
+                Environment.rotation *= Quaternion.AngleAxis(-90f, Vector3.forward);
                 PhaseChange(Phase.Drop);
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
-                Environment.rotation = Quaternion.AngleAxis(90f, Vector3.forward);
+                Environment.rotation *= Quaternion.AngleAxis(90f, Vector3.forward);
                 PhaseChange(Phase.Drop);
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
             {
-                Environment.rotation = Quaternion.AngleAxis(180f, Vector3.forward);
+                Environment.rotation *= Quaternion.AngleAxis(180f, Vector3.forward);
                 PhaseChange(Phase.Drop);
             }
         }
@@ -48,7 +52,6 @@ public class PhaseManager : MonoBehaviour
 
     public void PhaseChange(Phase newPhase)
     {
-        Debug.Log("Current Phase: " + newPhase);
         phase = newPhase;
 
         switch (phase)
@@ -91,11 +94,11 @@ public class PhaseManager : MonoBehaviour
         }
     }
 
-    public void CountDrop(GameObject avo)
+    public void CountDrop()
     {
+        Debug.Log("Count");
         dropCount++;
 
-        Debug.Log(dropCount + "/" + AvoCollection.transform.childCount);
         if (dropCount == AvoCollection.transform.childCount)
         {
             PhaseChange(Phase.Spawn);
