@@ -64,6 +64,7 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("Changing Phase from SpawnManager - spawner");
                 PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
             }
         }
@@ -80,6 +81,7 @@ public class SpawnManager : MonoBehaviour
             if (isReady)
             {
                 Spawn();
+                Debug.Log("Changing Phase from SpawnManager - after spawn");
                 PhaseManager.Instance.PhaseChange(Phase.Drop);
                 break;
             }

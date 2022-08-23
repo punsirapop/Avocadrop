@@ -23,6 +23,7 @@ public class PhaseManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("Changing Phase from Start");
         PhaseChange(Phase.Spawn);
     }
 
@@ -34,16 +35,19 @@ public class PhaseManager : MonoBehaviour
         {
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
+                Debug.Log("Changing Phase from PlayerAction");
                 Environment.rotation *= Quaternion.AngleAxis(-90f, Vector3.forward);
                 PhaseChange(Phase.Drop);
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
+                Debug.Log("Changing Phase from PlayerAction");
                 Environment.rotation *= Quaternion.AngleAxis(90f, Vector3.forward);
                 PhaseChange(Phase.Drop);
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
             {
+                Debug.Log("Changing Phase from PlayerAction");
                 Environment.rotation *= Quaternion.AngleAxis(180f, Vector3.forward);
                 PhaseChange(Phase.Drop);
             }
@@ -71,6 +75,7 @@ public class PhaseManager : MonoBehaviour
                 break;
         }
 
+        Debug.Log("=========== Current Phase: " + phase + " ===========");
         OnPhaseChanged?.Invoke(newPhase);
     }
 
@@ -90,17 +95,19 @@ public class PhaseManager : MonoBehaviour
 
         if(AvoCollection.transform.childCount == 0)
         {
+            Debug.Log("Changing Phase from HandleDrop");
             PhaseChange(Phase.Spawn);
         }
     }
 
     public void CountDrop()
     {
-        Debug.Log("Count");
         dropCount++;
+        Debug.Log("Count: " + dropCount + "/" + AvoCollection.transform.childCount);
 
         if (dropCount == AvoCollection.transform.childCount)
         {
+            Debug.Log("Changing Phase from CountDrop");
             PhaseChange(Phase.Spawn);
         }
     }

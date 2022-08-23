@@ -42,6 +42,10 @@ public class Avocado : MonoBehaviour
         {
             spriteRenderer.color = Color.black;
         }
+        else
+        {
+            spriteRenderer.color = color;
+        }
     }
     private void FixedUpdate()
     {
@@ -53,8 +57,46 @@ public class Avocado : MonoBehaviour
         phase = newPhase;
 
         isDropped = !(phase == Phase.Drop);
+        Debug.Log("Phase changed to " + newPhase + " from " + transform.position);
     }
 
+    public void DropControl(GameObject avo)
+    {
+        int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1f, -layermask);
+
+        if (avo != gameObject && !avo.GetComponent<Avocado>().isDropped)
+        {
+            isDropped = false;
+        }
+
+        switch (hits.Length)
+        {
+            case 0:
+                if (!isDropped)
+                {
+                    PhaseManager.Instance.SendMessage("CountDrop");
+                    Debug.Log("Sent msg from " + transform.position);
+                    isDropped = true;
+                }
+                break;
+            case 1:
+                fallingPoint.transform.position = hits[0].transform.position;
+                break;
+            case 2:
+                foreach (RaycastHit2D hit in hits)
+                {
+                    if (hit.collider.gameObject.layer == 8)
+                    {
+                        hit.collider.SendMessage("DropControl", avo);
+                        isDropped = true;
+                    }
+                }
+                break;
+        }
+    }
+
+    /*
     public void DropControl(GameObject avo)
     {
         int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
@@ -71,6 +113,7 @@ public class Avocado : MonoBehaviour
                 if (!isDropped)
                 {
                     PhaseManager.Instance.SendMessage("CountDrop");
+                    Debug.Log("Sent msg from " + transform.position);
                     isDropped = true;
                 }
                 break;
@@ -89,6 +132,7 @@ public class Avocado : MonoBehaviour
                 break;
         }
     }
+    */
 
     /*
     void Drop(Vector3 destination)
