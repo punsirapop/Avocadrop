@@ -2,19 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 using TMPro;
 
 public class PhaseManager : MonoBehaviour
 {
     public static PhaseManager Instance;
     public static event Action<Phase> OnPhaseChanged;
+    public static bool isDropping = false;
     public Phase phase;
 
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay;
 
-    int dropCount;
+    Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
 
     private void Awake()
     {
@@ -23,33 +25,31 @@ public class PhaseManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Changing Phase from Start");
+        // Debug.Log("Changing Phase from Start");
         PhaseChange(Phase.Spawn);
     }
 
     private void Update()
     {
         currentPhaseDisplay.SetText("Current Phase: " + phase);
-        dropCountDisplay.SetText("Dropped: " + dropCount + "/" + AvoCollection.transform.childCount);
+        dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
         if(phase == Phase.PlayerAction)
         {
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 Debug.Log("Changing Phase from PlayerAction");
-                Environment.rotation *= Quaternion.AngleAxis(-90f, Vector3.forward);
-                PhaseChange(Phase.Drop);
+                StartCoroutine(RotateAndDrop(90f));
+                
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
                 Debug.Log("Changing Phase from PlayerAction");
-                Environment.rotation *= Quaternion.AngleAxis(90f, Vector3.forward);
-                PhaseChange(Phase.Drop);
+                StartCoroutine(RotateAndDrop(-90f));
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
             {
                 Debug.Log("Changing Phase from PlayerAction");
-                Environment.rotation *= Quaternion.AngleAxis(180f, Vector3.forward);
-                PhaseChange(Phase.Drop);
+                StartCoroutine(RotateAndDrop(180f));
             }
         }
     }
@@ -57,6 +57,7 @@ public class PhaseManager : MonoBehaviour
     public void PhaseChange(Phase newPhase)
     {
         phase = newPhase;
+        Debug.Log("=========== Current Phase: " + phase + " ===========");
 
         switch (phase)
         {
@@ -69,13 +70,12 @@ public class PhaseManager : MonoBehaviour
             case Phase.Explode:
                 break;
             case Phase.Drop:
-                HandleDrop();
+                StartCoroutine(HandleDrop());
                 break;
             case Phase.Spawn:
                 break;
         }
-
-        Debug.Log("=========== Current Phase: " + phase + " ===========");
+        
         OnPhaseChanged?.Invoke(newPhase);
     }
 
@@ -89,28 +89,53 @@ public class PhaseManager : MonoBehaviour
 
     }
 
-    private void HandleDrop()
+    private IEnumerator RotateAndDrop(float angle)
     {
-        dropCount = 0;
-
-        if(AvoCollection.transform.childCount == 0)
+        Environment.rotation *= Quaternion.AngleAxis(angle, Vector3.forward);
+        /*
+        Quaternion rotateTo = Environment.rotation * Quaternion.AngleAxis(angle, Vector3.forward);
+        while (Quaternion.Angle(Environment.rotation, rotateTo) > 0)
         {
-            Debug.Log("Changing Phase from HandleDrop");
-            PhaseChange(Phase.Spawn);
+            Environment.rotation = Quaternion.Slerp(Environment.rotation, rotateTo, Time.deltaTime);
         }
+        */
+        yield return new WaitForFixedUpdate();
+        PhaseChange(Phase.Drop);
     }
 
-    public void CountDrop()
+    private IEnumerator HandleDrop()
     {
-        dropCount++;
-        Debug.Log("Count: " + dropCount + "/" + AvoCollection.transform.childCount);
+        avoDict.Clear();
 
-        if (dropCount == AvoCollection.transform.childCount)
+        foreach (Transform avo in AvoCollection.transform)
+        {
+            int height = Mathf.RoundToInt(avo.position.y);
+            avoDict.Add(avo, height);
+        }
+        foreach (KeyValuePair<Transform, int> sortAvo in avoDict.OrderBy(key => key.Value))
+        {
+            isDropping = true;
+            sortAvo.Key.gameObject.SendMessage("PleaseDrop");
+            yield return new WaitWhile(() => isDropping);
+        }
+
+        PhaseChange(Phase.Spawn);
+    }
+    /*
+    public void CountDrop(Transform place)
+    {
+        Debug.Log("Got msg from " + place.position);
+        avoDict.Remove(place);
+        Debug.Log("Count: " + avoDict.Count + "/" +
+            AvoCollection.transform.childCount + " - " + place.position);
+
+        if (avoDict.Count == 0)
         {
             Debug.Log("Changing Phase from CountDrop");
             PhaseChange(Phase.Spawn);
         }
     }
+    */
 }
 
 public enum Phase

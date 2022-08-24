@@ -5,26 +5,17 @@ using UnityEngine;
 public class Avocado : MonoBehaviour
 {
     public Color color;
-    public bool isDropped = false;
+    public bool pleaseDrop = false;
 
     GameObject fallingPoint;
     Transform pointCollection;
-    Phase phase;
 
     [SerializeField] SpriteRenderer spriteRenderer;
 
     private void OnEnable()
     {
-        PhaseManager.OnPhaseChanged += HandlePhaseChanged;
-    }
+        // PhaseManager.OnPhaseChanged += HandlePhaseChanged;
 
-    private void OnDisable()
-    {
-        PhaseManager.OnPhaseChanged -= HandlePhaseChanged;
-    }
-
-    private void Start()
-    {
         pointCollection = GameObject.Find("PointCollection").transform;
 
         fallingPoint = new GameObject("fallingPoint");
@@ -34,6 +25,75 @@ public class Avocado : MonoBehaviour
         color = spriteRenderer.color;
     }
 
+    private void OnDisable()
+    {
+        // PhaseManager.OnPhaseChanged -= HandlePhaseChanged;
+    }
+
+    private void Start()
+    {
+        /*
+        pointCollection = GameObject.Find("PointCollection").transform;
+
+        fallingPoint = new GameObject("fallingPoint");
+        fallingPoint.transform.position = transform.position;
+        fallingPoint.transform.parent = pointCollection;
+
+        color = spriteRenderer.color;
+        */
+        fallingPoint.transform.position = transform.position;
+    }
+
+    private void Update()
+    {
+        if (pleaseDrop)
+        {
+            spriteRenderer.color = Color.black;
+            Drop();
+        }
+        else
+        {
+            spriteRenderer.color = color;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        transform.position = Vector2.Lerp(transform.position, fallingPoint.transform.position, 3f);
+    }
+
+    /*
+    private void HandlePhaseChanged(Phase newPhase)
+    {
+        isDropped = (newPhase == Phase.Drop);
+    }
+    */
+
+    public void PleaseDrop()
+    {
+        pleaseDrop = true;
+    }
+
+    public void Drop()
+    {
+        // Debug.Log("Dropping...");
+        int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1f, -layermask);
+
+        if (hits.Length == 1)
+        {
+            fallingPoint.transform.position = hits[0].transform.position;
+        }
+        else
+        {
+            // PhaseManager.Instance.SendMessage("CountDrop", transform);
+            // Debug.Log("Sent msg from " + transform.position);
+            PhaseManager.isDropping = false;
+            pleaseDrop = false;
+        }
+    }
+
+    /*
     private void Update()
     {
         if (phase == Phase.Drop) DropControl(gameObject);
@@ -57,7 +117,7 @@ public class Avocado : MonoBehaviour
         phase = newPhase;
 
         isDropped = !(phase == Phase.Drop);
-        Debug.Log("Phase changed to " + newPhase + " from " + transform.position);
+        // Debug.Log("Phase changed to " + newPhase + " from " + transform.position);
     }
 
     public void DropControl(GameObject avo)
@@ -75,7 +135,7 @@ public class Avocado : MonoBehaviour
             case 0:
                 if (!isDropped)
                 {
-                    PhaseManager.Instance.SendMessage("CountDrop");
+                    PhaseManager.Instance.SendMessage("CountDrop", transform);
                     Debug.Log("Sent msg from " + transform.position);
                     isDropped = true;
                 }
@@ -95,6 +155,7 @@ public class Avocado : MonoBehaviour
                 break;
         }
     }
+    */
 
     /*
     public void DropControl(GameObject avo)

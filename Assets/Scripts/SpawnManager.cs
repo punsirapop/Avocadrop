@@ -18,6 +18,7 @@ public class SpawnManager : MonoBehaviour
     private void OnEnable()
     {
         PhaseManager.OnPhaseChanged += HandlePhaseChanged;
+
         pool = new ObjectPool<GameObject>(
             () => { return Instantiate(Avocado, UnusedCollection); },
             avo => {
@@ -35,22 +36,6 @@ public class SpawnManager : MonoBehaviour
     private void OnDisable()
     {
         PhaseManager.OnPhaseChanged -= HandlePhaseChanged;
-    }
-
-    private void Start()
-    {
-        /*
-        pool = new ObjectPool<GameObject>(
-            () => { return Instantiate(Avocado, UnusedCollection); },
-            avo => { avo.gameObject.SetActive(true);
-                avo.transform.parent = AvoCollection;
-            },
-            avo => { avo.gameObject.SetActive(false);
-                avo.transform.parent = UnusedCollection;
-            },
-            avo => { Destroy(avo.gameObject); },
-            false, capacity, max);
-        */
     }
 
     private void HandlePhaseChanged(Phase phase)
