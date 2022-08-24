@@ -18,6 +18,7 @@ public class SpawnManager : MonoBehaviour
     private void OnEnable()
     {
         PhaseManager.OnPhaseChanged += HandlePhaseChanged;
+
         pool = new ObjectPool<GameObject>(
             () => { return Instantiate(Avocado, UnusedCollection); },
             avo => {
@@ -37,22 +38,6 @@ public class SpawnManager : MonoBehaviour
         PhaseManager.OnPhaseChanged -= HandlePhaseChanged;
     }
 
-    private void Start()
-    {
-        /*
-        pool = new ObjectPool<GameObject>(
-            () => { return Instantiate(Avocado, UnusedCollection); },
-            avo => { avo.gameObject.SetActive(true);
-                avo.transform.parent = AvoCollection;
-            },
-            avo => { avo.gameObject.SetActive(false);
-                avo.transform.parent = UnusedCollection;
-            },
-            avo => { Destroy(avo.gameObject); },
-            false, capacity, max);
-        */
-    }
-
     private void HandlePhaseChanged(Phase phase)
     {
         if (phase == Phase.Spawn)
@@ -64,6 +49,7 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("Changing Phase from SpawnManager - spawner");
                 PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
             }
         }
@@ -80,6 +66,7 @@ public class SpawnManager : MonoBehaviour
             if (isReady)
             {
                 Spawn();
+                Debug.Log("Changing Phase from SpawnManager - after spawn");
                 PhaseManager.Instance.PhaseChange(Phase.Drop);
                 break;
             }
@@ -90,7 +77,7 @@ public class SpawnManager : MonoBehaviour
     {
         msgReceivedCount = 0;
         possibleSpaces.Clear();
-        Debug.Log("Sending messages to scanners");
+        // Debug.Log("Sending messages to scanners");
         if (!msgSent)
         {
             BroadcastMessage("SearchPossibleSpace", SendMessageOptions.DontRequireReceiver);
@@ -100,13 +87,13 @@ public class SpawnManager : MonoBehaviour
 
     public void CollectPossible(Vector3 position)
     {
-        Debug.Log("Received msg from scanner");
+        // Debug.Log("Received msg from scanner");
         msgReceivedCount++;
         if(position != Vector3.back)
         {
             possibleSpaces.Add(position);
         }
-        Debug.Log("Possible spaces - " + possibleSpaces.Count);
+        // Debug.Log("Possible spaces - " + possibleSpaces.Count);
 
         if(msgReceivedCount == transform.childCount)
         {
