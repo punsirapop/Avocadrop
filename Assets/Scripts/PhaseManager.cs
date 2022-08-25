@@ -9,7 +9,7 @@ public class PhaseManager : MonoBehaviour
 {
     public static PhaseManager Instance;
     public static event Action<Phase> OnPhaseChanged;
-    public static bool isDropping = false;
+    public bool isDropping = false;
     public Phase phase;
 
     [SerializeField] GameObject AvoCollection;
@@ -26,7 +26,7 @@ public class PhaseManager : MonoBehaviour
     private void Start()
     {
         // Debug.Log("Changing Phase from Start");
-        PhaseChange(Phase.Spawn);
+        PhaseChange(Phase.Preparation);
     }
 
     private void Update()
@@ -61,6 +61,8 @@ public class PhaseManager : MonoBehaviour
 
         switch (phase)
         {
+            case Phase.Preparation:
+                break;
             case Phase.PlayerAction:
                 HandlePlayerAction();
                 break;
@@ -140,6 +142,7 @@ public class PhaseManager : MonoBehaviour
 
 public enum Phase
 {
+    Preparation,
     PlayerAction,
     CheckExplode,
     Explode,

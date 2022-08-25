@@ -77,10 +77,10 @@ public class Avocado : MonoBehaviour
     public void Drop()
     {
         // Debug.Log("Dropping...");
-        int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1f, -layermask);
+        // int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1f);
 
-        if (hits.Length == 1)
+        if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7)
         {
             fallingPoint.transform.position = hits[0].transform.position;
         }
@@ -88,7 +88,7 @@ public class Avocado : MonoBehaviour
         {
             // PhaseManager.Instance.SendMessage("CountDrop", transform);
             // Debug.Log("Sent msg from " + transform.position);
-            PhaseManager.isDropping = false;
+            PhaseManager.Instance.isDropping = false;
             pleaseDrop = false;
         }
     }
