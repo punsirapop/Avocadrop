@@ -59,7 +59,7 @@ public class Avocado : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position = Vector2.Lerp(transform.position, fallingPoint.transform.position, 3f);
+        transform.position = Vector2.MoveTowards(transform.position, fallingPoint.transform.position, 3f);
     }
 
     /*

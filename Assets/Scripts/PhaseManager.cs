@@ -39,7 +39,6 @@ public class PhaseManager : MonoBehaviour
             {
                 Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(90f));
-                
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
@@ -114,13 +113,23 @@ public class PhaseManager : MonoBehaviour
             int height = Mathf.RoundToInt(avo.position.y);
             avoDict.Add(avo, height);
         }
+
+        int oldHeight = -99;
         foreach (KeyValuePair<Transform, int> sortAvo in avoDict.OrderBy(key => key.Value))
         {
+            if(oldHeight == -99) oldHeight = sortAvo.Value;
+
+            if(sortAvo.Value > oldHeight)
+            {
+                yield return new WaitWhile(() => isDropping);
+            }
+            
             isDropping = true;
             sortAvo.Key.gameObject.SendMessage("PleaseDrop");
-            yield return new WaitWhile(() => isDropping);
+            oldHeight = sortAvo.Value;
         }
 
+        yield return new WaitWhile(() => isDropping);
         PhaseChange(Phase.Spawn);
     }
     /*

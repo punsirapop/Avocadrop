@@ -42,6 +42,16 @@ public class SpawnManager : MonoBehaviour
     {
         if (phase == Phase.Spawn)
         {
+            StartCoroutine(LoopSpawn());
+            /*
+            while (AvoCollection.childCount < capacity)
+            {
+                Debug.Log("Spawning an Avocado");
+                SingleSpawn();
+            }
+            Debug.Log("Changing Phase from SpawnManager - spawner");
+            PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
+            /*
             if(AvoCollection.childCount < capacity)
             {
                 Debug.Log("Spawning an Avocado");
@@ -52,10 +62,23 @@ public class SpawnManager : MonoBehaviour
                 Debug.Log("Changing Phase from SpawnManager - spawner");
                 PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
             }
+            */
         }
     }
 
-    private void SingleSpawn()
+    private IEnumerator LoopSpawn()
+    {
+        while (AvoCollection.childCount < capacity)
+        {
+            Debug.Log("Spawning an Avocado");
+            GameObject avo = SingleSpawn();
+            yield return new WaitWhile(() => avo.GetComponent<Avocado>().pleaseDrop);
+        }
+        Debug.Log("Changing Phase from SpawnManager - spawner");
+        PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
+    }
+
+    private GameObject SingleSpawn()
     {
         isReady = false;
         msgSent = false;
@@ -65,10 +88,11 @@ public class SpawnManager : MonoBehaviour
         {
             if (isReady)
             {
-                Spawn();
-                Debug.Log("Changing Phase from SpawnManager - after spawn");
-                PhaseManager.Instance.PhaseChange(Phase.Drop);
-                break;
+                GameObject avo = Spawn();
+                // Debug.Log("Changing Phase from SpawnManager - after spawn");
+                avo.SendMessage("PleaseDrop");
+                // PhaseManager.Instance.PhaseChange(Phase.Drop);
+                return avo;
             }
         }
     }
@@ -102,12 +126,14 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private void Spawn()
+    private GameObject Spawn()
     {
         int spawnIndex = Random.Range(0, possibleSpaces.Count);
         Debug.Log("Dropping in - " + possibleSpaces[spawnIndex]);
 
         GameObject avo = pool.Get();
         avo.transform.position = possibleSpaces[spawnIndex];
+
+        return avo;
     }
 }

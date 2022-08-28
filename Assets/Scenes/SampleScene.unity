@@ -4149,13 +4149,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d62ea41f9771b4047b913c6ddcdab3f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacles:
-  - {fileID: 7646173429875307414, guid: 6784bee5139084f4e9482bdb08b0ed32, type: 3}
-  - {fileID: 5503113472660562293, guid: 6cc510d9d767d69468555a457b44c43d, type: 3}
-  - {fileID: 9025760016632868891, guid: c2b027e0551cdd143b7aa51445177635, type: 3}
-  - {fileID: 4620367825626769337, guid: d183657ca0bfbf74a8cee293c5b30ad6, type: 3}
-  - {fileID: 4290267717657745346, guid: d7b3a9fe37c13424ca8ce68da1fab0ba, type: 3}
-  - {fileID: 6023968274843280409, guid: 3ea66c720a70a174c807f672d6b0c97f, type: 3}
+  tier0:
+  - {fileID: 1799625082416865132, guid: 6e5643b7db7d2f944aba98bbbaf88b38, type: 3}
+  - {fileID: 8021110973505315714, guid: 8236a6dc5b5d7f046aa1869ab23df6db, type: 3}
+  - {fileID: 2812322180430599585, guid: 39e6d265bc11da644a8d494123c84cba, type: 3}
+  tier1:
+  - {fileID: 698310703153968825, guid: 1d931fdddb3ea9b4b99c7c29c3f14eaf, type: 3}
+  - {fileID: 6493620678519637165, guid: e55ec805de2f79947ba648b85fdccafd, type: 3}
+  - {fileID: 6990559688144185412, guid: bf2013a207472924ea7b529da752e6f6, type: 3}
+  tier2:
+  - {fileID: 7291647950480257132, guid: 17367c10aa3284d47a52e0598ee98c35, type: 3}
+  - {fileID: 1984087129192096837, guid: f631c5164509bc84f83d9b7932633af6, type: 3}
+  - {fileID: 7400138698153968671, guid: 4aaf73d70e02040439d123fe6abb5722, type: 3}
+  tier3:
+  - {fileID: 4754766635512395805, guid: 803137bc946575a4c990ea3aa8fed98f, type: 3}
+  - {fileID: 2795378714181969969, guid: ed40fe95491347d48aa4f60d4b63d43f, type: 3}
+  - {fileID: 5649342524347866356, guid: ebc1f0d6335c3204c897a74c15612c9c, type: 3}
 --- !u!1 &1161669804
 GameObject:
   m_ObjectHideFlags: 0
@@ -6136,7 +6145,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -2
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.93842137, b: 0.8160377, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
