@@ -118,12 +118,13 @@ public class PhaseManager : MonoBehaviour
         foreach (KeyValuePair<Transform, int> sortAvo in avoDict.OrderBy(key => key.Value))
         {
             if(oldHeight == -99) oldHeight = sortAvo.Value;
-
+            // yield return new WaitWhile(() => isDropping);
+            
             if(sortAvo.Value > oldHeight)
             {
                 yield return new WaitWhile(() => isDropping);
             }
-            
+
             isDropping = true;
             sortAvo.Key.gameObject.SendMessage("PleaseDrop");
             oldHeight = sortAvo.Value;

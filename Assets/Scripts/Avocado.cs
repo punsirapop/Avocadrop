@@ -78,7 +78,7 @@ public class Avocado : MonoBehaviour
     {
         // Debug.Log("Dropping...");
         // int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1f);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, .65f);
 
         if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7)
         {
