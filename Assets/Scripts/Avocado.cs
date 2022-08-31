@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Avocado : MonoBehaviour
+public class Avocado : MonoBehaviour, IPointerClickHandler
 {
     public Color color;
     public bool pleaseDrop = false;
@@ -44,7 +45,15 @@ public class Avocado : MonoBehaviour
         fallingPoint.transform.position = transform.position;
     }
 
-    private void Update()
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (PhaseManager.Instance.phase == Phase.PlayerAction)
+        {
+            SpawnManager.Instance.SendMessage("Despawn", gameObject);
+        }
+    }
+
+    private void FixedUpdate()
     {
         if (pleaseDrop)
         {
@@ -55,9 +64,19 @@ public class Avocado : MonoBehaviour
         {
             spriteRenderer.color = color;
         }
+
+        /*
+        if(currentPhase == Phase.PlayerAction)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                SpawnManager.instance.SendMessage("Despawn", gameObject);
+            }
+        }
+        */
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         transform.position = Vector2.MoveTowards(transform.position, fallingPoint.transform.position, 3f);
     }

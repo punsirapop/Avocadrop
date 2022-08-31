@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using System;
 
 public class SpawnManager : MonoBehaviour
 {
+    public static SpawnManager Instance;
+
     [SerializeField] Transform AvoCollection;
     [SerializeField] Transform UnusedCollection;
     [SerializeField] GameObject Avocado;
@@ -17,6 +20,11 @@ public class SpawnManager : MonoBehaviour
 
     private void OnEnable()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+
         PhaseManager.OnPhaseChanged += HandlePhaseChanged;
 
         pool = new ObjectPool<GameObject>(
@@ -128,12 +136,18 @@ public class SpawnManager : MonoBehaviour
 
     private GameObject Spawn()
     {
-        int spawnIndex = Random.Range(0, possibleSpaces.Count);
+        int spawnIndex = UnityEngine.Random.Range(0, possibleSpaces.Count);
         Debug.Log("Dropping in - " + possibleSpaces[spawnIndex]);
 
         GameObject avo = pool.Get();
         avo.transform.position = possibleSpaces[spawnIndex];
 
         return avo;
+    }
+
+    public void Despawn(GameObject avo)
+    {
+        Debug.Log("Despawning...");
+        pool.Release(avo);
     }
 }

@@ -56,7 +56,6 @@ public class PhaseManager : MonoBehaviour
     public void PhaseChange(Phase newPhase)
     {
         phase = newPhase;
-        Debug.Log("=========== Current Phase: " + phase + " ===========");
 
         switch (phase)
         {
@@ -78,6 +77,7 @@ public class PhaseManager : MonoBehaviour
         }
         
         OnPhaseChanged?.Invoke(newPhase);
+        Debug.Log("=========== Current Phase: " + phase + " ===========");
     }
 
     private void HandlePlayerAction()
@@ -119,11 +119,13 @@ public class PhaseManager : MonoBehaviour
         {
             if(oldHeight == -99) oldHeight = sortAvo.Value;
             // yield return new WaitWhile(() => isDropping);
+
             
             if(sortAvo.Value > oldHeight)
             {
                 yield return new WaitWhile(() => isDropping);
             }
+            
 
             isDropping = true;
             sortAvo.Key.gameObject.SendMessage("PleaseDrop");
