@@ -23,6 +23,7 @@ public class BoardState : MonoBehaviour
 
     public Camera cam;
     GameObject[][] gameState;
+    static GameObject[] currentMatch = new GameObject[30];
 
     //void Update()
     //{
@@ -56,7 +57,16 @@ public class BoardState : MonoBehaviour
     public void updateState()
     {
         int count = 0;
+        //reset arrays
         gameState = ReturnRectangularGameObjectArray(9, 9);
+        foreach (GameObject avocado in currentMatch)
+            {
+                if (avocado)
+                {
+                avocado.GetComponent<Avocado>().isPartOfMatch = false;
+                }
+            }
+        currentMatch = new GameObject[30];
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < m; j++)
@@ -253,6 +263,7 @@ public class BoardState : MonoBehaviour
                 
             }
         }
+        int count = 0;
         Debug.Log("The largest connected match at these points:");
         for (int i = 0; i < n; i++)
         {
@@ -260,7 +271,10 @@ public class BoardState : MonoBehaviour
             {
                 if (result[i][j] == 1)
                 {
+                    input[i][j].GetComponent<Avocado>().isPartOfMatch = true;
                     Debug.Log("At " + i + "," + j);
+                    currentMatch[count] = input[i][j];
+                    count++;
                 }
             }
         }

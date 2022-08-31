@@ -8,6 +8,8 @@ public class Avocado : MonoBehaviour
     colorText colorEnum;
     public bool pleaseDrop = false;
 
+    public bool isPartOfMatch;
+
     GameObject fallingPoint;
     Transform pointCollection;
 
