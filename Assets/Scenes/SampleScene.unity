@@ -1462,8 +1462,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88217a809cf269b47bc1bdeba145695c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  gridCollection: {fileID: 0}
+  fallingDone: 0
+  cam: {fileID: 519420031}
 --- !u!4 &418913747
 Transform:
   m_ObjectHideFlags: 0
@@ -1529,6 +1529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   phase: 0
+  boardState: {fileID: 418913746}
   AvoCollection: {fileID: 1724148242}
   Environment: {fileID: 1941729880}
   currentPhaseDisplay: {fileID: 963370090}
