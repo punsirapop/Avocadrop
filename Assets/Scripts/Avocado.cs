@@ -5,12 +5,23 @@ using UnityEngine;
 public class Avocado : MonoBehaviour
 {
     public Color color;
+    colorText colorEnum;
     public bool pleaseDrop = false;
 
     GameObject fallingPoint;
     Transform pointCollection;
 
     [SerializeField] SpriteRenderer spriteRenderer;
+
+    public enum colorText
+    {
+        green,
+        red,
+        yellow,
+        blue,
+        magenta,
+        cyan,
+    }
 
     private void OnEnable()
     {
@@ -23,6 +34,40 @@ public class Avocado : MonoBehaviour
         fallingPoint.transform.parent = pointCollection;
 
         color = spriteRenderer.color;
+    }
+
+    private colorText randomColor()
+    {
+        List<colorText> colorList = new List<colorText> {colorText.green,colorText.red, colorText.yellow, colorText.blue, colorText.magenta, colorText.cyan };
+        int index = Random.Range(0,colorList.Count);
+        //Debug.Log(colorList[index]);
+        return colorList[index];
+
+    }
+
+    private void applyColor(colorText colorEnum)
+    {
+        switch (colorEnum)
+        {
+            case colorText.green:
+                color = Color.green;
+                break;
+            case colorText.red:
+                color = Color.red;
+                break;
+            case colorText.yellow:
+                color = Color.yellow;
+                break;
+            case colorText.blue:
+                color = Color.blue;
+                break;
+            case colorText.magenta:
+                color = Color.magenta;
+                break;
+            case colorText.cyan:
+                color = Color.cyan;
+                break;
+        }
     }
 
     private void OnDisable()
@@ -42,13 +87,15 @@ public class Avocado : MonoBehaviour
         color = spriteRenderer.color;
         */
         fallingPoint.transform.position = transform.position;
+        colorEnum = randomColor();
+        applyColor(colorEnum);
     }
 
     private void Update()
     {
         if (pleaseDrop)
         {
-            spriteRenderer.color = Color.black;
+            //spriteRenderer.color = Color.black;
             Drop();
         }
         else
@@ -59,7 +106,8 @@ public class Avocado : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position = Vector2.Lerp(transform.position, fallingPoint.transform.position, 3f);
+        //transform.position = Vector2.Lerp(transform.position, fallingPoint.transform.position, 3f);
+        //transform.position = fallingPoint.transform.position;
     }
 
     /*
@@ -82,7 +130,8 @@ public class Avocado : MonoBehaviour
 
         if (hits.Length == 1)
         {
-            fallingPoint.transform.position = hits[0].transform.position;
+            //fallingPoint.transform.position = hits[0].transform.position;
+            transform.position = hits[0].transform.position;
         }
         else
         {

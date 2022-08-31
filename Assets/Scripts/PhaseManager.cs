@@ -12,6 +12,8 @@ public class PhaseManager : MonoBehaviour
     public static bool isDropping = false;
     public Phase phase;
 
+    public BoardState boardState;
+
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay;
@@ -74,6 +76,9 @@ public class PhaseManager : MonoBehaviour
                 break;
             case Phase.Spawn:
                 break;
+            case Phase.UpdateState:
+                updateBoardState();
+                break;
         }
         
         OnPhaseChanged?.Invoke(newPhase);
@@ -119,8 +124,15 @@ public class PhaseManager : MonoBehaviour
             yield return new WaitWhile(() => isDropping);
         }
 
+        PhaseChange(Phase.UpdateState);
+    }
+
+    private void updateBoardState()
+    {
+        boardState.updateState();
         PhaseChange(Phase.Spawn);
     }
+
     /*
     public void CountDrop(Transform place)
     {
@@ -144,5 +156,6 @@ public enum Phase
     CheckExplode,
     Explode,
     Drop,
-    Spawn
+    UpdateState,
+    Spawn,
 }
