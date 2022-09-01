@@ -72,7 +72,7 @@ public class BoardState : MonoBehaviour
             {
                 if (avocado)
                 {
-                avocado.GetComponent<Avocado>().isPartOfMatch = false;
+                    avocado.GetComponent<Avocado>().isPartOfMatch = false;
                 }
             }
         currentMatch = new GameObject[30];
