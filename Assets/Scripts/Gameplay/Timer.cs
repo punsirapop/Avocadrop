@@ -48,6 +48,7 @@ public class Timer : MonoBehaviour
             else
             {
                 Debug.Log("Out of time!");
+                PhaseManager.Instance.PhaseChange(Phase.GameEnd);
                 isTimeRunning = false;
             }
         }
