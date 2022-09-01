@@ -15,6 +15,7 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay;
+    [SerializeField] GameObject RestartButton;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
 
@@ -78,6 +79,9 @@ public class PhaseManager : MonoBehaviour
                 break;
             case Phase.UpdateState:
                 HandleUpdateState();
+                break;
+            case Phase.GameEnd:
+                HandleGameEnd();
                 break;
         }
         
@@ -150,6 +154,11 @@ public class PhaseManager : MonoBehaviour
     {
         BoardState.Instance.updateState();
         PhaseChange(Phase.PlayerAction);
+    }
+
+    private void HandleGameEnd()
+    {
+        RestartButton.SetActive(true);
     }
 
     /*
