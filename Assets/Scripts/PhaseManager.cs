@@ -9,7 +9,7 @@ public class PhaseManager : MonoBehaviour
 {
     public static PhaseManager Instance;
     public static event Action<Phase> OnPhaseChanged;
-    public static bool isDropping = false;
+    public bool isDropping = false;
     public Phase phase;
 
     public BoardState boardState;
@@ -28,7 +28,7 @@ public class PhaseManager : MonoBehaviour
     private void Start()
     {
         // Debug.Log("Changing Phase from Start");
-        PhaseChange(Phase.Spawn);
+        PhaseChange(Phase.Preparation);
     }
 
     private void Update()
@@ -41,7 +41,6 @@ public class PhaseManager : MonoBehaviour
             {
                 Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(90f));
-                
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
@@ -59,10 +58,11 @@ public class PhaseManager : MonoBehaviour
     public void PhaseChange(Phase newPhase)
     {
         phase = newPhase;
-        Debug.Log("=========== Current Phase: " + phase + " ===========");
 
         switch (phase)
         {
+            case Phase.Preparation:
+                break;
             case Phase.PlayerAction:
                 HandlePlayerAction();
                 break;
@@ -82,6 +82,7 @@ public class PhaseManager : MonoBehaviour
         }
         
         OnPhaseChanged?.Invoke(newPhase);
+        Debug.Log("=========== Current Phase: " + phase + " ===========");
     }
 
     private void HandlePlayerAction()
@@ -117,11 +118,23 @@ public class PhaseManager : MonoBehaviour
             int height = Mathf.RoundToInt(avo.position.y);
             avoDict.Add(avo, height);
         }
+
+        int oldHeight = -99;
         foreach (KeyValuePair<Transform, int> sortAvo in avoDict.OrderBy(key => key.Value))
         {
+            if(oldHeight == -99) oldHeight = sortAvo.Value;
+            // yield return new WaitWhile(() => isDropping);
+
+            
+            if(sortAvo.Value > oldHeight)
+            {
+                yield return new WaitWhile(() => isDropping);
+            }
+            
+
             isDropping = true;
             sortAvo.Key.gameObject.SendMessage("PleaseDrop");
-            yield return new WaitWhile(() => isDropping);
+            oldHeight = sortAvo.Value;
         }
 
         PhaseChange(Phase.UpdateState);
@@ -130,6 +143,7 @@ public class PhaseManager : MonoBehaviour
     private void updateBoardState()
     {
         boardState.updateState();
+        //yield return new WaitWhile(() => isDropping);
         PhaseChange(Phase.Spawn);
     }
 
@@ -152,6 +166,7 @@ public class PhaseManager : MonoBehaviour
 
 public enum Phase
 {
+    Preparation,
     PlayerAction,
     CheckExplode,
     Explode,

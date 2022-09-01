@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Avocado : MonoBehaviour
+public class Avocado : MonoBehaviour, IPointerClickHandler
 {
     public Color color;
     colorText colorEnum;
@@ -93,7 +94,15 @@ public class Avocado : MonoBehaviour
         applyColor(colorEnum);
     }
 
-    private void Update()
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (PhaseManager.Instance.phase == Phase.PlayerAction)
+        {
+            SpawnManager.Instance.SendMessage("Despawn", gameObject);
+        }
+    }
+
+    private void FixedUpdate()
     {
         if (pleaseDrop)
         {
@@ -104,12 +113,21 @@ public class Avocado : MonoBehaviour
         {
             spriteRenderer.color = color;
         }
+
+        /*
+        if(currentPhase == Phase.PlayerAction)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                SpawnManager.instance.SendMessage("Despawn", gameObject);
+            }
+        }
+        */
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
-        //transform.position = Vector2.Lerp(transform.position, fallingPoint.transform.position, 3f);
-        //transform.position = fallingPoint.transform.position;
+        transform.position = Vector2.MoveTowards(transform.position, fallingPoint.transform.position, 3f);
     }
 
     /*
@@ -127,10 +145,10 @@ public class Avocado : MonoBehaviour
     public void Drop()
     {
         // Debug.Log("Dropping...");
-        int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1f, -layermask);
+        // int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, .65f);
 
-        if (hits.Length == 1)
+        if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7)
         {
             //fallingPoint.transform.position = hits[0].transform.position;
             transform.position = hits[0].transform.position;
@@ -139,7 +157,7 @@ public class Avocado : MonoBehaviour
         {
             // PhaseManager.Instance.SendMessage("CountDrop", transform);
             // Debug.Log("Sent msg from " + transform.position);
-            PhaseManager.isDropping = false;
+            PhaseManager.Instance.isDropping = false;
             pleaseDrop = false;
         }
     }
