@@ -150,7 +150,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7)
         {
             //fallingPoint.transform.position = hits[0].transform.position;
-            transform.position = hits[0].transform.position;
+            //transform.position = hits[0].transform.position;
+            transform.position = Vector2.Lerp(transform.position, hits[0].transform.position, 3f);
         }
         else
         {

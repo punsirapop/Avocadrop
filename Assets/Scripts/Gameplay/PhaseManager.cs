@@ -23,13 +23,17 @@ public class PhaseManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if(Instance == null)
+        {
+            Instance = this;
+        }
     }
 
     private void Start()
     {
         // Debug.Log("Changing Phase from Start");
         PhaseChange(Phase.Preparation);
+        Time.timeScale = 1f;
     }
 
     private void Update()
