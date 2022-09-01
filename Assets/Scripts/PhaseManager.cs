@@ -76,6 +76,9 @@ public class PhaseManager : MonoBehaviour
                 break;
             case Phase.Spawn:
                 break;
+            case Phase.UpdateState:
+                HandleUpdateState();
+                break;
         }
         
         OnPhaseChanged?.Invoke(newPhase);
@@ -142,6 +145,13 @@ public class PhaseManager : MonoBehaviour
         yield return new WaitWhile(() => isDropping);
         PhaseChange(Phase.Spawn);
     }
+
+    private void HandleUpdateState()
+    {
+        BoardState.Instance.updateState();
+        PhaseChange(Phase.PlayerAction);
+    }
+
     /*
     public void CountDrop(Transform place)
     {
@@ -167,5 +177,6 @@ public enum Phase
     Explode,
     Drop,
     Spawn,
+    UpdateState,
     GameEnd
 }

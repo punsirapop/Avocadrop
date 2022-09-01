@@ -6,12 +6,23 @@ using UnityEngine.EventSystems;
 public class Avocado : MonoBehaviour, IPointerClickHandler
 {
     public Color color;
-    public bool pleaseDrop = false;
+    public bool pleaseDrop = false, isPartOfMatch;
 
     GameObject fallingPoint;
     Transform pointCollection;
+    colorText colorEnum;
 
     [SerializeField] SpriteRenderer spriteRenderer;
+
+    public enum colorText
+    {
+        green,
+        red,
+        yellow,
+        blue,
+        magenta,
+        cyan,
+    }
 
     private void OnEnable()
     {
@@ -31,6 +42,39 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         // PhaseManager.OnPhaseChanged -= HandlePhaseChanged;
     }
 
+    private colorText randomColor()
+    {
+        List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow, colorText.blue, colorText.magenta, colorText.cyan };
+        int index = Random.Range(0, colorList.Count);
+        //Debug.Log(colorList[index]);
+        return colorList[index];
+    }
+
+    private void applyColor(colorText colorEnum)
+    {
+        switch (colorEnum)
+        {
+            case colorText.green:
+                color = Color.green;
+                break;
+            case colorText.red:
+                color = Color.red;
+                break;
+            case colorText.yellow:
+                color = Color.yellow;
+                break;
+            case colorText.blue:
+                color = Color.blue;
+                break;
+            case colorText.magenta:
+                color = Color.magenta;
+                break;
+            case colorText.cyan:
+                color = Color.cyan;
+                break;
+        }
+    }
+
     private void Start()
     {
         /*
@@ -43,6 +87,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         color = spriteRenderer.color;
         */
         fallingPoint.transform.position = transform.position;
+        colorEnum = randomColor();
+        applyColor(colorEnum);
     }
 
     public void OnPointerClick(PointerEventData eventData)
