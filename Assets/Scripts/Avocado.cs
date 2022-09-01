@@ -28,13 +28,16 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     {
         // PhaseManager.OnPhaseChanged += HandlePhaseChanged;
 
-        pointCollection = GameObject.Find("PointCollection").transform;
+        //pointCollection = GameObject.Find("PointCollection").transform;
 
-        fallingPoint = new GameObject("fallingPoint");
-        fallingPoint.transform.position = transform.position;
-        fallingPoint.transform.parent = pointCollection;
+        //fallingPoint = new GameObject("fallingPoint");
+        //fallingPoint.layer = LayerMask.NameToLayer("fallingPoint");
+        //fallingPoint.transform.position = transform.position;
+        //fallingPoint.transform.parent = pointCollection;
 
-        color = spriteRenderer.color;
+        //color = spriteRenderer.color;
+        colorEnum = randomColor();
+        applyColor(colorEnum);
     }
 
     private void OnDisable()
@@ -86,9 +89,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
 
         color = spriteRenderer.color;
         */
-        fallingPoint.transform.position = transform.position;
-        colorEnum = randomColor();
-        applyColor(colorEnum);
+        //fallingPoint.transform.position = transform.position;
+        
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -103,7 +105,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     {
         if (pleaseDrop)
         {
-            spriteRenderer.color = Color.black;
+            //spriteRenderer.color = Color.black;
             Drop();
         }
         else
@@ -124,7 +126,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
 
     private void LateUpdate()
     {
-        transform.position = Vector2.MoveTowards(transform.position, fallingPoint.transform.position, 3f);
+        //transform.position = Vector2.MoveTowards(transform.position, fallingPoint.transform.position, 3f);
     }
 
     /*
@@ -147,7 +149,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
 
         if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7)
         {
-            fallingPoint.transform.position = hits[0].transform.position;
+            //fallingPoint.transform.position = hits[0].transform.position;
+            transform.position = hits[0].transform.position;
         }
         else
         {
@@ -155,6 +158,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             // Debug.Log("Sent msg from " + transform.position);
             PhaseManager.Instance.isDropping = false;
             pleaseDrop = false;
+            Debug.Log("Done dropping");
+            PhaseManager.Instance.doneDropCount++;
         }
     }
 

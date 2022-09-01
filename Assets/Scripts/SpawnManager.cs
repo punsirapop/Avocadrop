@@ -13,7 +13,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] GameObject Avocado;
 
     ObjectPool<GameObject> pool;
-    int capacity = 20, max = 80;
+    public int capacity = 20, max = 80;
     int msgReceivedCount;
     bool isReady = false, msgSent = false;
     List<Vector3> possibleSpaces = new List<Vector3>();
@@ -83,7 +83,7 @@ public class SpawnManager : MonoBehaviour
             yield return new WaitWhile(() => avo.GetComponent<Avocado>().pleaseDrop);
         }
         Debug.Log("Changing Phase from SpawnManager - spawner");
-        PhaseManager.Instance.PhaseChange(Phase.UpdateState);
+        PhaseManager.Instance.PhaseChange(Phase.Drop);
     }
 
     private GameObject SingleSpawn()
