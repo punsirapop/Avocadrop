@@ -33,6 +33,7 @@ public class PhaseManager : MonoBehaviour
     {
         currentPhaseDisplay.SetText("Current Phase: " + phase);
         dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
+
         if(phase == Phase.PlayerAction)
         {
             if (Input.GetKeyUp(KeyCode.LeftArrow))
@@ -60,6 +61,7 @@ public class PhaseManager : MonoBehaviour
         switch (phase)
         {
             case Phase.Preparation:
+                HandlePreparation();
                 break;
             case Phase.PlayerAction:
                 HandlePlayerAction();
@@ -78,6 +80,11 @@ public class PhaseManager : MonoBehaviour
         
         OnPhaseChanged?.Invoke(newPhase);
         Debug.Log("=========== Current Phase: " + phase + " ===========");
+    }
+
+    private void HandlePreparation()
+    {
+        
     }
 
     private void HandlePlayerAction()
@@ -159,5 +166,6 @@ public enum Phase
     CheckExplode,
     Explode,
     Drop,
-    Spawn
+    Spawn,
+    GameEnd
 }
