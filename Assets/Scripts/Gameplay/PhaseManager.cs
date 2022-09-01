@@ -12,6 +12,8 @@ public class PhaseManager : MonoBehaviour
     public bool isDropping = false;
     public Phase phase;
 
+    public int doneDropCount = 0;
+
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay;
@@ -57,6 +59,7 @@ public class PhaseManager : MonoBehaviour
 
     public void PhaseChange(Phase newPhase)
     {
+        Debug.Log("=========== From Phase: "+ phase + " to Current Phase: " + newPhase + " ===========");
         phase = newPhase;
 
         switch (phase)
@@ -78,7 +81,7 @@ public class PhaseManager : MonoBehaviour
             case Phase.Spawn:
                 break;
             case Phase.UpdateState:
-                HandleUpdateState();
+                StartCoroutine(HandleUpdateState());
                 break;
             case Phase.GameEnd:
                 HandleGameEnd();
@@ -86,7 +89,6 @@ public class PhaseManager : MonoBehaviour
         }
         
         OnPhaseChanged?.Invoke(newPhase);
-        Debug.Log("=========== Current Phase: " + phase + " ===========");
     }
 
     private void HandlePreparation()
@@ -120,6 +122,7 @@ public class PhaseManager : MonoBehaviour
 
     private IEnumerator HandleDrop()
     {
+        doneDropCount = 0;
         avoDict.Clear();
 
         foreach (Transform avo in AvoCollection.transform)
@@ -147,11 +150,13 @@ public class PhaseManager : MonoBehaviour
         }
 
         yield return new WaitWhile(() => isDropping);
-        PhaseChange(Phase.Spawn);
+
+        PhaseChange(Phase.UpdateState);
     }
 
-    private void HandleUpdateState()
+    private IEnumerator HandleUpdateState()
     {
+        yield return new WaitUntil(() => doneDropCount == SpawnManager.Instance.capacity);
         BoardState.Instance.updateState();
         PhaseChange(Phase.PlayerAction);
     }

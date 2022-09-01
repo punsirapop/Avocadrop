@@ -24,7 +24,7 @@ public class BoardState : MonoBehaviour
 
     public Camera cam;
     GameObject[][] gameState;
-    static GameObject[] currentMatch = new GameObject[30];
+    static GameObject[] currentMatch = new GameObject[n*m];
 
     //void Update()
     //{
