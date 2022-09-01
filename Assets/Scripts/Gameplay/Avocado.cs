@@ -76,6 +76,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
                 color = Color.cyan;
                 break;
         }
+
+        spriteRenderer.color = color;
     }
 
     private void Start()
@@ -108,10 +110,12 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             //spriteRenderer.color = Color.black;
             Drop();
         }
+        /*
         else
         {
             spriteRenderer.color = color;
         }
+        */
 
         /*
         if(currentPhase == Phase.PlayerAction)

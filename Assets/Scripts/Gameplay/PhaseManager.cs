@@ -17,9 +17,9 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay;
-    [SerializeField] GameObject RestartButton;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
+    bool isGameEnded = false;
 
     private void Awake()
     {
@@ -43,19 +43,24 @@ public class PhaseManager : MonoBehaviour
 
         if(phase == Phase.PlayerAction)
         {
+            if (isGameEnded)
+            {
+                PhaseChange(Phase.GameEnd);
+            }
+
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
-                Debug.Log("Changing Phase from PlayerAction");
+                // Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(90f));
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
-                Debug.Log("Changing Phase from PlayerAction");
+                // Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(-90f));
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
             {
-                Debug.Log("Changing Phase from PlayerAction");
+                // Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(180f));
             }
         }
@@ -155,7 +160,7 @@ public class PhaseManager : MonoBehaviour
 
         yield return new WaitWhile(() => isDropping);
 
-        PhaseChange(Phase.UpdateState);
+        PhaseChange(Phase.Spawn);
     }
 
     private IEnumerator HandleUpdateState()
@@ -167,7 +172,12 @@ public class PhaseManager : MonoBehaviour
 
     private void HandleGameEnd()
     {
-        RestartButton.SetActive(true);
+        isGameEnded = true;
+    }
+
+    public void EndMe()
+    {
+        isGameEnded = true;
     }
 
     /*
