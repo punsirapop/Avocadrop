@@ -99,8 +99,13 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     {
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
         {
-            SpawnManager.Instance.SendMessage("Despawn", gameObject);
+            DeleteMe();
         }
+    }
+
+    public void DeleteMe()
+    {
+        SpawnManager.Instance.SendMessage("Despawn", gameObject);
     }
 
     private void FixedUpdate()
