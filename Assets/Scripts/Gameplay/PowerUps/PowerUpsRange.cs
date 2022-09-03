@@ -11,6 +11,7 @@ public class PowerUpsRange : MonoBehaviour
         filter.SetLayerMask(LayerMask.GetMask("Avocado"));
         List<Collider2D> result = new List<Collider2D>();
         List<Collider2D> results = new List<Collider2D>();
+
         foreach (Collider2D collider in myColliders)
         {
             Physics2D.OverlapCollider(collider, filter, result);
@@ -23,6 +24,6 @@ public class PowerUpsRange : MonoBehaviour
         }
 
         PhaseManager.Instance.PhaseChange(Phase.Drop);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

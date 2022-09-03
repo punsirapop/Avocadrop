@@ -22,27 +22,47 @@ public class PowerUpsManager : MonoBehaviour
 
         foreach(Transform p in PUSpaces)
         {
-            PUList.Add(p, null);
+            GameObject newPU = Instantiate(PUPrefab, p);
+            newPU.SetActive(false);
+            PUList.Add(p, newPU);
         }
     }
 
     public void getPowerUp(int index)
     {
-        if (PUList.ContainsValue(null))
+        foreach (KeyValuePair<Transform, GameObject> pair in PUList)
         {
+            // GameObject range = pair.Value.GetComponent<PowerUps>().Range;
+            pair.Value.TryGetComponent(out PowerUps PUComp);
+            if (PUComp.Range == null)
+            {
+                pair.Value.SetActive(true);
+                // pair.Value.transform.position = pair.Key.position;
+                pair.Value.SendMessage("SetRange", PURanges[index]);
+                break;
+            }
+        }
+
+        /*
+        if (PUList.ContainsValue(PUPrefab))
+        {
+            Debug.Log("FOUND");
+            /*
             foreach(KeyValuePair<Transform, GameObject> pair in PUList)
             {
                 if(pair.Value == null)
                 {
-                    GameObject newPU = Instantiate(PUPrefab, pair.Key);
-                    newPU.GetComponent<PowerUps>().Range = PURanges[index];
-                    PUList[pair.Key] = newPU;
+                    pair.Value.GetComponent<PowerUps>().Range = PURanges[index];
+                    pair.Value.SetActive(true);
                     break;
                 }
             }
+            
         }
+        */
     }
 
+    /*
     public void usePowerUp(GameObject PU)
     {
         foreach (KeyValuePair<Transform, GameObject> pair in PUList)
@@ -54,4 +74,5 @@ public class PowerUpsManager : MonoBehaviour
             }
         }
     }
+    */
 }
