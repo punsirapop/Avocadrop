@@ -17,6 +17,7 @@ public class BoardState : MonoBehaviour
 
     // result stores the final result grid
     static readonly int[][] result = ReturnRectangularIntArray(n, m);
+    static readonly int[][] resultForPatternSearch = ReturnRectangularIntArray(n+2, m+2);
 
     // stores the count of cells in the
     // largest connected component
@@ -35,28 +36,38 @@ public class BoardState : MonoBehaviour
         L_shape2,
         L_shape3,
         L_shape4,
+        T_shape1,
+        T_shape2,
+        T_shape3,
+        T_shape4,
         T_shape,
         none
     }
     
     Dictionary<matchPattern, int> patternSizeDictionary = new Dictionary<matchPattern, int>()
         {
-            {matchPattern.cross,3},
-            {matchPattern.L_shape1,3},
-            {matchPattern.L_shape2,3},
-            {matchPattern.L_shape3,3},
-            {matchPattern.L_shape4,3},
-            {matchPattern.square,2},
-            //{matchPattern.L_shape,3},
-            //{matchPattern.T_shape,3},
+            {matchPattern.cross,5},
+            {matchPattern.L_shape1,5},
+            {matchPattern.L_shape2,5},
+            {matchPattern.L_shape3,5},
+            {matchPattern.L_shape4,5},
+            {matchPattern.T_shape1,5},
+            {matchPattern.T_shape2,5},
+            {matchPattern.T_shape3,5},
+            {matchPattern.T_shape4,5},
+            {matchPattern.square,4},
         };
 
-    static readonly int[][] sqarePattern = createPattern(new int[2] {1,1}, new int[2] { 1, 1 });
-    static readonly int[][] crossPattern = createPattern(new int[3] {0,1,0}, new int[3] { 1, 1, 1 }, new int[3] { 0, 1, 0 });
-    static readonly int[][] L_shapePattern1 = createPattern(new int[3] {1,0,0}, new int[3] { 1, 0, 0 }, new int[3] { 1, 1, 1 });
-    static readonly int[][] L_shapePattern2 = createPattern(new int[3] {0,0,1}, new int[3] { 0, 0, 1 }, new int[3] { 1, 1, 1 });
-    static readonly int[][] L_shapePattern3 = createPattern(new int[3] {1,1,1}, new int[3] { 0, 0, 1 }, new int[3] { 0, 0, 1 });
-    static readonly int[][] L_shapePattern4 = createPattern(new int[3] {1,1,1}, new int[3] { 1, 0, 0 }, new int[3] { 1, 0, 0 });
+    static readonly int[][] sqarePattern = createPattern(new int[4], new int[4] {0, 1, 1, 0}, new int[4] {0, 1, 1 ,0}, new int[4]);
+    static readonly int[][] crossPattern = createPattern(new int[5], new int[5] {0,0,1,0,0}, new int[5] {0, 1, 1, 1 ,0}, new int[5] {0, 0, 1, 0 ,0 }, new int[5]);
+    static readonly int[][] L_shapePattern1 = createPattern(new int[5], new int[5] {0, 1, 0, 0, 0 }, new int[5] {0, 1, 0, 0 , 0}, new int[5] {0, 1, 1, 1 ,0}, new int[5]);
+    static readonly int[][] L_shapePattern2 = createPattern(new int[5], new int[5] {0, 0, 0, 1, 0 }, new int[5] {0, 0, 0, 1 , 0}, new int[5] {0, 1, 1, 1 ,0}, new int[5]);
+    static readonly int[][] L_shapePattern3 = createPattern(new int[5], new int[5] {0, 1, 1, 1, 0 }, new int[5] {0, 0, 0, 1 , 0}, new int[5] {0, 0, 0, 1 ,0}, new int[5]);
+    static readonly int[][] L_shapePattern4 = createPattern(new int[5], new int[5] {0, 1, 1, 1, 0 }, new int[5] {0, 1, 0, 0 , 0}, new int[5] {0, 1, 0, 0 ,0}, new int[5]);
+    static readonly int[][] T_shapePattern1 = createPattern(new int[5], new int[5] {0, 1, 1, 1, 0 }, new int[5] {0, 0, 1, 0 , 0}, new int[5] {0, 0, 1, 0 ,0}, new int[5]);
+    static readonly int[][] T_shapePattern2 = createPattern(new int[5], new int[5] {0, 0, 0, 1, 0 }, new int[5] {0, 1, 1, 1 , 0}, new int[5] {0, 0, 0, 1 ,0}, new int[5]);
+    static readonly int[][] T_shapePattern3 = createPattern(new int[5], new int[5] {0, 0, 1, 0, 0 }, new int[5] {0, 0, 1, 0 , 0}, new int[5] {0, 1, 1, 1 ,0}, new int[5]);
+    static readonly int[][] T_shapePattern4 = createPattern(new int[5], new int[5] {0, 1, 0, 0, 0 }, new int[5] {0, 1, 1, 1 , 0}, new int[5] {0, 1, 0, 0 ,0}, new int[5]);
 
     Dictionary<matchPattern, int[][]> patternToMatch = new Dictionary<matchPattern, int[][]>()
         {
@@ -66,6 +77,10 @@ public class BoardState : MonoBehaviour
             {matchPattern.L_shape2,L_shapePattern2},
             {matchPattern.L_shape3,L_shapePattern3},
             {matchPattern.L_shape4,L_shapePattern4},
+            {matchPattern.T_shape1,T_shapePattern1},
+            {matchPattern.T_shape2,T_shapePattern2},
+            {matchPattern.T_shape3,T_shapePattern3},
+            {matchPattern.T_shape4,T_shapePattern4},
         };
 
 
@@ -150,37 +165,29 @@ public class BoardState : MonoBehaviour
             }
         }
 
-        //checking things in gameState
         Debug.Log("=========== total found : " + count + "===========");
-        //Debug.Log("=========== checking in list ===========");
-        //for (int i = 0; i < gameState.Length; i++)
-        //{
-        //    for (int j = 0; j < gameState[i].Length; j++)
-        //    {
-        //        Debug.Log("=========== Checking at: (" + i + "," + j + ") ===========");
-        //        if (gameState[i][j] != null)
-        //        {
-        //            Debug.Log(gameState[i][j].GetComponent<Avocado>().color);
-        //        }
-        //    }
-        //}
 
         computeLargestConnectedGrid(gameState);
+        makeArrayForPatternSearch();
         currentPattern = detectWhatPattern();
         Debug.Log("Found this pattern: "+currentPattern);
 
-
-
-
-
-
     }
 
+    void makeArrayForPatternSearch()
+    {
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                resultForPatternSearch[i + 1][j + 1] = result[i][j];
+            }
+        }
+    }
 
     matchPattern detectWhatPattern()
     {
         
-        //result
         foreach (matchPattern pattern in patternSizeDictionary.Keys)
         {
             Debug.Log("Checking if match is "+pattern);
@@ -197,9 +204,9 @@ public class BoardState : MonoBehaviour
 
     bool isThisPattern(matchPattern pattern)
     {
-        for (int i = 0; i <= n - patternSizeDictionary[pattern]; i++)
+        for (int i = 0; i <= n+2 - patternSizeDictionary[pattern]; i++)
         {
-            for (int j = 0; j <= m - patternSizeDictionary[pattern]; j++)
+            for (int j = 0; j <= m+2 - patternSizeDictionary[pattern]; j++)
             {
                 //Debug.Log(result[i][j]);
                 if (checkIfPatternAt(pattern,i, j))
@@ -220,7 +227,7 @@ public class BoardState : MonoBehaviour
         {
             for (int y = 0; y < patternSizeDictionary[pattern]; y++)
             {
-                if (result[i+x][j+y] != patternTemplate[x][y])
+                if (resultForPatternSearch[i+x][j+y] != patternTemplate[x][y])
                 {
                     return false;
                 }
