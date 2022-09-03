@@ -21,7 +21,7 @@ public class BoardState : MonoBehaviour
 
     // stores the count of cells in the
     // largest connected component
-    public static int COUNT;
+    public static int currentMatchCount;
 
     public Camera cam;
     GameObject[][] gameState;
@@ -271,7 +271,7 @@ public class BoardState : MonoBehaviour
         }
 
         visited[i][j] = 1;
-        COUNT++;
+        currentMatchCount++;
 
         // x_move and y_move arrays
         // are the possible movements
@@ -339,7 +339,7 @@ public class BoardState : MonoBehaviour
                 if (input[i][j] != null)
                 {
                     reset_visited();
-                    COUNT = 0;
+                    currentMatchCount = 0;
 
                     // checking cell to the right
                     if (j + 1 < m)
@@ -348,14 +348,14 @@ public class BoardState : MonoBehaviour
                     }
 
                     // updating result
-                    if (COUNT >= current_max)
+                    if (currentMatchCount >= current_max)
                     {
-                        current_max = COUNT;
+                        current_max = currentMatchCount;
                         bestColor = input[i][j].GetComponent<Avocado>().color;
                         reset_result(input[i][j].GetComponent<Avocado>().color, input);
                     }
                     reset_visited();
-                    COUNT = 0;
+                    currentMatchCount = 0;
 
                     // checking cell downwards
                     if (i + 1 < n)
@@ -364,9 +364,9 @@ public class BoardState : MonoBehaviour
                     }
 
                     // updating result
-                    if (COUNT >= current_max)
+                    if (currentMatchCount >= current_max)
                     {
-                        current_max = COUNT;
+                        current_max = currentMatchCount;
                         bestColor = input[i][j].GetComponent<Avocado>().color;
                         reset_result(input[i][j].GetComponent<Avocado>().color, input);
                     }
