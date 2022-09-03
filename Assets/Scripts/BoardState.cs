@@ -21,10 +21,11 @@ public class BoardState : MonoBehaviour
 
     // stores the count of cells in the
     // largest connected component
-    public static int currentMatchCount;
 
     public Camera cam;
+
     GameObject[][] gameState;
+    public static int currentMatchCount;
     static GameObject[] currentMatch = new GameObject[n*m];
     public matchPattern currentPattern;
 
