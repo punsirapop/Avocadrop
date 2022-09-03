@@ -11,18 +11,20 @@ public class PhaseManager : MonoBehaviour
     public static event Action<Phase> OnPhaseChanged;
     public bool isDropping = false;
     public Phase phase;
+    BoardState boardState;
 
     public int doneDropCount = 0;
 
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
-    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay;
+    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
 
     private void Awake()
     {
         Instance = this;
+
     }
 
     private void Start()
@@ -33,10 +35,12 @@ public class PhaseManager : MonoBehaviour
 
     private void Update()
     {
+        boardState = GetComponent<BoardState>();
         currentPhaseDisplay.SetText("Current Phase: " + phase);
         dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
+        patternFoundDisplay.SetText("Pattern Found: " + boardState.currentPattern);
 
-        if(phase == Phase.PlayerAction)
+        if (phase == Phase.PlayerAction)
         {
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {

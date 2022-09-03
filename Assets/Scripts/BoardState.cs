@@ -25,7 +25,62 @@ public class BoardState : MonoBehaviour
     public Camera cam;
     GameObject[][] gameState;
     static GameObject[] currentMatch = new GameObject[n*m];
+    public matchPattern currentPattern;
 
+    public enum matchPattern
+    {
+        square,
+        cross,
+        L_shape1,
+        L_shape2,
+        L_shape3,
+        L_shape4,
+        T_shape,
+        none
+    }
+    
+    Dictionary<matchPattern, int> patternSizeDictionary = new Dictionary<matchPattern, int>()
+        {
+            {matchPattern.cross,3},
+            {matchPattern.L_shape1,3},
+            {matchPattern.L_shape2,3},
+            {matchPattern.L_shape3,3},
+            {matchPattern.L_shape4,3},
+            {matchPattern.square,2},
+            //{matchPattern.L_shape,3},
+            //{matchPattern.T_shape,3},
+        };
+
+    static readonly int[][] sqarePattern = createPattern(new int[2] {1,1}, new int[2] { 1, 1 });
+    static readonly int[][] crossPattern = createPattern(new int[3] {0,1,0}, new int[3] { 1, 1, 1 }, new int[3] { 0, 1, 0 });
+    static readonly int[][] L_shapePattern1 = createPattern(new int[3] {1,0,0}, new int[3] { 1, 0, 0 }, new int[3] { 1, 1, 1 });
+    static readonly int[][] L_shapePattern2 = createPattern(new int[3] {0,0,1}, new int[3] { 0, 0, 1 }, new int[3] { 1, 1, 1 });
+    static readonly int[][] L_shapePattern3 = createPattern(new int[3] {1,1,1}, new int[3] { 0, 0, 1 }, new int[3] { 0, 0, 1 });
+    static readonly int[][] L_shapePattern4 = createPattern(new int[3] {1,1,1}, new int[3] { 1, 0, 0 }, new int[3] { 1, 0, 0 });
+
+    Dictionary<matchPattern, int[][]> patternToMatch = new Dictionary<matchPattern, int[][]>()
+        {
+            {matchPattern.square,sqarePattern},
+            {matchPattern.cross,crossPattern},
+            {matchPattern.L_shape1,L_shapePattern1},
+            {matchPattern.L_shape2,L_shapePattern2},
+            {matchPattern.L_shape3,L_shapePattern3},
+            {matchPattern.L_shape4,L_shapePattern4},
+        };
+
+
+    public static int[][] createPattern(params int[][] patternRows)
+    {
+        int numOfRows = patternRows.Length;
+        int[][] newArray = new int[numOfRows][];
+
+        for (int i = 0; i < numOfRows; i++)
+        {
+            newArray[i] = patternRows[i];
+        }
+
+        return newArray;
+    }
     //void Update()
     //{
     //    if (Input.GetKeyUp(KeyCode.DownArrow))
@@ -75,7 +130,7 @@ public class BoardState : MonoBehaviour
                     avocado.GetComponent<Avocado>().isPartOfMatch = false;
                 }
             }
-        currentMatch = new GameObject[30];
+        currentMatch = new GameObject[n*m];
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < m; j++)
@@ -111,28 +166,68 @@ public class BoardState : MonoBehaviour
         //}
 
         computeLargestConnectedGrid(gameState);
+        currentPattern = detectWhatPattern();
+        Debug.Log("Found this pattern: "+currentPattern);
 
-        
+
+
 
 
 
     }
 
-    void getLargestConnection()
+
+    matchPattern detectWhatPattern()
     {
         
+        //result
+        foreach (matchPattern pattern in patternSizeDictionary.Keys)
+        {
+            Debug.Log("Checking if match is "+pattern);
+            if (isThisPattern(pattern))
+            {
+                return pattern;
+            }
+        }
+
+        return matchPattern.none;
+
+
     }
 
-    void detectWhatPattern()
+    bool isThisPattern(matchPattern pattern)
     {
+        for (int i = 0; i <= n - patternSizeDictionary[pattern]; i++)
+        {
+            for (int j = 0; j <= m - patternSizeDictionary[pattern]; j++)
+            {
+                //Debug.Log(result[i][j]);
+                if (checkIfPatternAt(pattern,i, j))
+                {
+                    return true;
+                }
+            }
+                
+        }
 
+        return false;
     }
 
-    void getFlaggedCircle()
+    bool checkIfPatternAt(matchPattern pattern,int i, int j)
     {
-
+        int[][] patternTemplate = patternToMatch[pattern];
+        for (int x = 0; x < patternSizeDictionary[pattern]; x++)
+        {
+            for (int y = 0; y < patternSizeDictionary[pattern]; y++)
+            {
+                if (result[i+x][j+y] != patternTemplate[x][y])
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-    
 
     // Function checks if a cell is valid i.e
     // it is inside the grid and equal to the key
