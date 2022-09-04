@@ -115,7 +115,8 @@ public class PhaseManager : MonoBehaviour
 
     private void HandleCheckExplode()
     {
-
+        Debug.Log("In handle check explode");
+        boardState.explodeAllIfCan();
     }
 
     private IEnumerator RotateAndDrop(float angle)
@@ -169,8 +170,10 @@ public class PhaseManager : MonoBehaviour
     private IEnumerator HandleUpdateState()
     {
         yield return new WaitUntil(() => doneDropCount == SpawnManager.Instance.capacity);
-        BoardState.Instance.updateState();
-        PhaseChange(Phase.PlayerAction);
+        boardState.updateState();
+        PhaseChange(Phase.CheckExplode);
+
+
     }
 
     private void HandleGameEnd()

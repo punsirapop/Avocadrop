@@ -26,7 +26,7 @@ public class BoardState : MonoBehaviour
 
     GameObject[][] gameState;
     public static int currentMatchCount;
-    static GameObject[] currentMatch = new GameObject[n*m];
+    public static GameObject[] currentMatch = new GameObject[n*m];
     public matchPattern currentPattern;
 
     public enum matchPattern
@@ -134,18 +134,49 @@ public class BoardState : MonoBehaviour
      }
 
 
+    public void explodeAllIfCan()
+    {
+        checkForMatchesAndDetectPatterns();
+        Debug.Log("Current Match amount: " + currentMatchCount);
+        if (currentMatchCount >= 3)
+        {
+            Debug.Log("Passed >= 3 check");
+
+            while (currentMatchCount >= 3)
+            {
+                //explode this color match
+                for (int i = 0; i < currentMatchCount; i++)
+                {
+                    Debug.Log("Exxxplooooooooooooooooooooosion!!!!!!");
+                    currentMatch[i].GetComponent<Avocado>().isPartOfMatch = false;
+                    currentMatch[i].GetComponent<Avocado>().DeleteMe();
+                }
+                //check pattern
+                //check bonus
+                //check score
+                updateState();
+                checkForMatchesAndDetectPatterns();
+            }
+            PhaseManager.Instance.PhaseChange(Phase.Drop);
+        }
+        else
+        {
+            PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
+        }
+    }
+
     public void updateState()
     {
         int count = 0;
         //reset arrays
         gameState = ReturnRectangularGameObjectArray(9, 9);
-        foreach (GameObject avocado in currentMatch)
-            {
-                if (avocado)
-                {
-                    avocado.GetComponent<Avocado>().isPartOfMatch = false;
-                }
-            }
+        //foreach (GameObject avocado in currentMatch)
+        //    {
+        //        if (avocado)
+        //        {
+        //            avocado.GetComponent<Avocado>().isPartOfMatch = false;
+        //        }
+        //    }
         currentMatch = new GameObject[n*m];
         for (int i = 0; i < n; i++)
         {
@@ -166,13 +197,17 @@ public class BoardState : MonoBehaviour
             }
         }
 
-        Debug.Log("=========== total found : " + count + "===========");
+        Debug.Log("=========== total found : " + count + " avocados on board===========");
 
+        
+
+    }
+
+    public void checkForMatchesAndDetectPatterns()
+    {
         computeLargestConnectedGrid(gameState);
-        makeArrayForPatternSearch();
         currentPattern = detectWhatPattern();
-        Debug.Log("Found this pattern: "+currentPattern);
-
+        Debug.Log("Found this pattern: " + currentPattern);
     }
 
     void makeArrayForPatternSearch()
@@ -188,7 +223,7 @@ public class BoardState : MonoBehaviour
 
     matchPattern detectWhatPattern()
     {
-        
+        makeArrayForPatternSearch();
         foreach (matchPattern pattern in patternSizeDictionary.Keys)
         {
             Debug.Log("Checking if match is "+pattern);
@@ -376,20 +411,22 @@ public class BoardState : MonoBehaviour
             }
         }
         int count = 0;
-        Debug.Log("The largest connected match at these points:");
-        for (int i = 0; i < n; i++)
+        if (current_max > 2)
         {
-            for (int j = 0; j < m; j++)
+            for (int i = 0; i < n; i++)
             {
-                if (result[i][j] == 1)
+                for (int j = 0; j < m; j++)
                 {
-                    input[i][j].GetComponent<Avocado>().isPartOfMatch = true;
-                    Debug.Log("At " + i + "," + j);
-                    currentMatch[count] = input[i][j];
-                    count++;
+                    if (result[i][j] == 1)
+                    {
+                        input[i][j].GetComponent<Avocado>().isPartOfMatch = true;
+                        currentMatch[count] = input[i][j];
+                        count++;
+                    }
                 }
             }
         }
+        currentMatchCount = current_max;
         Debug.Log("The largest connected match of the grid is :" + current_max);
         Debug.Log(bestColor);
 
