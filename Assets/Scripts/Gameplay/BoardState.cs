@@ -183,7 +183,6 @@ public class BoardState : MonoBehaviour
         {
             for (int j = 0; j < m; j++)
             {
-                Debug.Log("=========== Checking at: (" + i + "," + j + ") ===========");
 
                 Collider2D avocadoFound = Physics2D.OverlapCircle(new Vector2(i, j), 0.1f, LayerMask.GetMask("Avocado"));
 
@@ -198,9 +197,6 @@ public class BoardState : MonoBehaviour
             }
         }
 
-        Debug.Log("=========== total found : " + count + " avocados on board===========");
-
-        
 
     }
 
@@ -297,9 +293,30 @@ public class BoardState : MonoBehaviour
             return false;
         }
     }
+
+    internal static bool noObstacle(int i, int j, Vector2 dir)
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(new Vector2(i,j), dir, 1f, LayerMask.GetMask("Obstacle"));
+
+        Debug.Log("--------------------------------------- laser hits ------------------------");
+        Debug.Log("at: " + i +", "+ j);
+        Debug.Log("hits amount: " + hits.Length);
+        Debug.Log("direction: " + dir);
+        foreach(RaycastHit2D hit in hits)
+        {
+            Debug.Log(hit.collider.gameObject.layer);
+        }
+        if (hits.Length == 1 && hits[0].collider.gameObject.layer == 9)
+        {
+            Debug.Log("hit obstacle!!!!!!!!!!!!!!!!!!");
+            return false;
+        }
+        return true;
+    }
+
     // BFS to find all cells in
     // connection with key = input[i][j]
-    public static void BFS(GameObject x, GameObject y, int i, int j, GameObject[][] input)
+    public static void BFS(GameObject x, GameObject y, int i, int j, GameObject[][] input, Vector2 dir)
     {
         // terminating case for BFS
         if (input[i][j] == null || x == null || y == null || !x.GetComponent<Avocado>().color.Equals(y.GetComponent<Avocado>().color))
@@ -320,9 +337,10 @@ public class BoardState : MonoBehaviour
         // connected with input[i][j]
         for (int u = 0; u < 4; u++)
         {
-            if (is_valid(i + y_move[u], j + x_move[u], x.GetComponent<Avocado>().color, input))
+            Vector2 nextDir = new Vector2(y_move[u], x_move[u]);
+            if (is_valid(i + y_move[u], j + x_move[u], x.GetComponent<Avocado>().color, input) && noObstacle(i,j,nextDir))
             {
-                BFS(input[i][j], input[i + y_move[u]][j + x_move[u]], i + y_move[u], j + x_move[u], input);
+                BFS(input[i][j], input[i + y_move[u]][j + x_move[u]], i + y_move[u], j + x_move[u], input, nextDir);
             }
         }
     }
@@ -381,7 +399,7 @@ public class BoardState : MonoBehaviour
                     // checking cell to the right
                     if (j + 1 < m)
                     {
-                        BFS(input[i][j], input[i][j + 1], i, j, input);
+                        BFS(input[i][j], input[i][j + 1], i, j, input, new Vector2(0,1));
                     }
 
                     // updating result
@@ -397,7 +415,7 @@ public class BoardState : MonoBehaviour
                     // checking cell downwards
                     if (i + 1 < n)
                     {
-                        BFS(input[i][j], input[i + 1][j], i, j, input);
+                        BFS(input[i][j], input[i + 1][j], i, j, input, new Vector2(1,0));
                     }
 
                     // updating result
