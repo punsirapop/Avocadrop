@@ -6342,7 +6342,7 @@ MonoBehaviour:
   AvoCollection: {fileID: 1724148243}
   UnusedCollection: {fileID: 1495994141}
   Avocado: {fileID: 3072734123504855915, guid: c67999b312b2d5c42a4602656fecb4d2, type: 3}
-  capacity: 20
+  capacity: 40
   max: 80
 --- !u!4 &1087717974 stripped
 Transform:

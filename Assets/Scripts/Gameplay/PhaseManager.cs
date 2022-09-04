@@ -85,8 +85,6 @@ public class PhaseManager : MonoBehaviour
             case Phase.CheckExplode:
                 HandleCheckExplode();
                 break;
-            case Phase.Explode:
-                break;
             case Phase.Drop:
                 StartCoroutine(HandleDrop());
                 break;
@@ -116,7 +114,7 @@ public class PhaseManager : MonoBehaviour
     private void HandleCheckExplode()
     {
         Debug.Log("In handle check explode");
-        boardState.explodeAllIfCan();
+        StartCoroutine(boardState.explodeAllIfCan());
     }
 
     private IEnumerator RotateAndDrop(float angle)
@@ -208,7 +206,6 @@ public enum Phase
     Preparation,
     PlayerAction,
     CheckExplode,
-    Explode,
     Drop,
     Spawn,
     UpdateState,

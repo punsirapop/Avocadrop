@@ -134,8 +134,9 @@ public class BoardState : MonoBehaviour
      }
 
 
-    public void explodeAllIfCan()
+    public IEnumerator explodeAllIfCan()
     {
+        yield return new WaitForSeconds(.5f);
         checkForMatchesAndDetectPatterns();
         Debug.Log("Current Match amount: " + currentMatchCount);
         if (currentMatchCount >= 3)
