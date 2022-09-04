@@ -136,7 +136,6 @@ public class BoardState : MonoBehaviour
 
     public IEnumerator explodeAllIfCan()
     {
-        yield return new WaitForSeconds(.5f);
         checkForMatchesAndDetectPatterns();
         Debug.Log("Current Match amount: " + currentMatchCount);
         if (currentMatchCount >= 3)
@@ -146,6 +145,7 @@ public class BoardState : MonoBehaviour
             while (currentMatchCount >= 3)
             {
                 //explode this color match
+                yield return new WaitForSeconds(.5f);
                 for (int i = 0; i < currentMatchCount; i++)
                 {
                     Debug.Log("Exxxplooooooooooooooooooooosion!!!!!!");
@@ -157,6 +157,7 @@ public class BoardState : MonoBehaviour
                 //check score
                 updateState();
                 checkForMatchesAndDetectPatterns();
+
             }
             PhaseManager.Instance.PhaseChange(Phase.Drop);
         }
