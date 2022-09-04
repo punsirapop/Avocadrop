@@ -83,7 +83,7 @@ public class SpawnManager : MonoBehaviour
             yield return new WaitWhile(() => avo.GetComponent<Avocado>().pleaseDrop);
         }
         Debug.Log("Changing Phase from SpawnManager - spawner");
-        PhaseManager.Instance.PhaseChange(Phase.Drop);
+        PhaseManager.Instance.PhaseChange(Phase.UpdateState);
     }
 
     private GameObject SingleSpawn()

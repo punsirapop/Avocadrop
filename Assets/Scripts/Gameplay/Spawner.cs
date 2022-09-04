@@ -12,7 +12,7 @@ public class Spawner : MonoBehaviour
         isFound = false;
 
         // Debug.Log(transform.position.x + " - Searching");
-        int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
+        int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid")) & ~(LayerMask.GetMask("Obstacle"));
         for(int i = 0; i < 8; i++)
         {
             RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, i, -layermask);

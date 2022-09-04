@@ -20,17 +20,21 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
+    bool isGameEnded = false;
 
     private void Awake()
     {
-        Instance = this;
-
+        if(Instance == null)
+        {
+            Instance = this;
+        }
     }
 
     private void Start()
     {
         // Debug.Log("Changing Phase from Start");
         PhaseChange(Phase.Preparation);
+        Time.timeScale = 1f;
     }
 
     private void Update()
@@ -42,19 +46,24 @@ public class PhaseManager : MonoBehaviour
 
         if (phase == Phase.PlayerAction)
         {
+            if (isGameEnded)
+            {
+                PhaseChange(Phase.GameEnd);
+            }
+
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
-                Debug.Log("Changing Phase from PlayerAction");
+                // Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(90f));
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
-                Debug.Log("Changing Phase from PlayerAction");
+                // Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(-90f));
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
             {
-                Debug.Log("Changing Phase from PlayerAction");
+                // Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(180f));
             }
         }
@@ -85,6 +94,9 @@ public class PhaseManager : MonoBehaviour
                 break;
             case Phase.UpdateState:
                 StartCoroutine(HandleUpdateState());
+                break;
+            case Phase.GameEnd:
+                HandleGameEnd();
                 break;
         }
         
@@ -151,7 +163,7 @@ public class PhaseManager : MonoBehaviour
 
         yield return new WaitWhile(() => isDropping);
 
-        PhaseChange(Phase.UpdateState);
+        PhaseChange(Phase.Spawn);
     }
 
     private IEnumerator HandleUpdateState()
@@ -159,6 +171,16 @@ public class PhaseManager : MonoBehaviour
         yield return new WaitUntil(() => doneDropCount == SpawnManager.Instance.capacity);
         BoardState.Instance.updateState();
         PhaseChange(Phase.PlayerAction);
+    }
+
+    private void HandleGameEnd()
+    {
+        isGameEnded = true;
+    }
+
+    public void EndMe()
+    {
+        isGameEnded = true;
     }
 
     /*

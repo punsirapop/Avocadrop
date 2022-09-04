@@ -6,8 +6,9 @@ using TMPro;
 public class Timer : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI timeDisplay;
+    [SerializeField] List<GameObject> Buttons;
 
-    float timeRemaining = 10f;
+    float timeRemaining = 100f;
     bool isTimeRunning = false, isPrepared = false;
 
     private void OnEnable()
@@ -31,6 +32,14 @@ public class Timer : MonoBehaviour
             isTimeRunning = true;
             isPrepared = true;
         }
+
+        if(phase == Phase.GameEnd)
+        {
+            foreach (GameObject button in Buttons)
+            {
+                button.SetActive(true);
+            }
+        }
     }
 
     private void Update()
@@ -48,6 +57,7 @@ public class Timer : MonoBehaviour
             else
             {
                 Debug.Log("Out of time!");
+                PhaseManager.Instance.SendMessage("EndMe");
                 isTimeRunning = false;
             }
         }

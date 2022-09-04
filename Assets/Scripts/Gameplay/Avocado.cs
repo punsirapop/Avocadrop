@@ -77,6 +77,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
                 color = Color.cyan;
                 break;
         }
+
+        spriteRenderer.color = color;
     }
 
     private void Start()
@@ -98,8 +100,13 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     {
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
         {
-            SpawnManager.Instance.SendMessage("Despawn", gameObject);
+            DeleteMe();
         }
+    }
+
+    public void DeleteMe()
+    {
+        SpawnManager.Instance.SendMessage("Despawn", gameObject);
     }
 
     private void FixedUpdate()
@@ -109,10 +116,12 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             //spriteRenderer.color = Color.black;
             Drop();
         }
+        /*
         else
         {
             spriteRenderer.color = color;
         }
+        */
 
         /*
         if(currentPhase == Phase.PlayerAction)
@@ -151,7 +160,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7)
         {
             //fallingPoint.transform.position = hits[0].transform.position;
-            transform.position = hits[0].transform.position;
+            //transform.position = hits[0].transform.position;
+            transform.position = Vector2.Lerp(transform.position, hits[0].transform.position, 3f);
         }
         else
         {
