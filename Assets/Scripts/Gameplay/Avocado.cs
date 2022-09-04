@@ -100,7 +100,38 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
         {
             DeleteMe();
+            //checkObstacleNearMe();
         }
+    }
+
+    //test lasser
+    public void checkObstacleNearMe()
+    {
+        int[] x_move = new int[] { 0, 0, 1, -1 };
+        int[] y_move = new int[] { 1, -1, 0, 0 };
+
+        // right -> left -> up -> down
+        for (int u = 0; u < 4; u++)
+        {
+            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, new Vector2(y_move[u], x_move[u]), 1f, LayerMask.GetMask("Obstacle"));
+
+            Debug.Log("--------------------------------------- laser hits ------------------------");
+            Debug.Log("att: " + transform.position);
+            Debug.Log("hits amount: " + hits.Length);
+            Debug.Log("direction: " + new Vector2(y_move[u], x_move[u]));
+            Debug.Log("hits.Length: " + hits.Length);
+            Debug.Log(hits.Length == 1);
+            foreach (RaycastHit2D hit in hits)
+            {
+                Debug.Log(hit.collider.gameObject.layer);
+                Debug.Log(hit.collider.gameObject.layer == 9);
+            }
+
+            if (hits.Length == 1 && hits[0].collider.gameObject.layer == 9)
+                {
+                    Debug.Log("hit obstacle!!!!!!!!!!!!!!!!!!");
+                }
+    }
     }
 
     public void DeleteMe()
