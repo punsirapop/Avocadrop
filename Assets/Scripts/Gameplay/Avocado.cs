@@ -11,8 +11,10 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     GameObject fallingPoint;
     Transform pointCollection;
     colorText colorEnum;
+    int isLock = 0;
 
     [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] GameObject lockSprite, permLockSprite;
 
     public enum colorText
     {
@@ -99,7 +101,25 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     {
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
         {
-            DeleteMe();
+            Debug.Log("CLICKED");
+            isLock = (isLock + 1) % 3;
+
+            lockSprite.SetActive(false);
+            permLockSprite.SetActive(false);
+            gameObject.layer = 8;
+            switch (isLock)
+            {
+                case 0:
+                    break;
+                case 1:
+                    lockSprite.SetActive(true);
+                    break;
+                case 2:
+                    permLockSprite.SetActive(true);
+                    gameObject.layer = 9;
+                    break;
+            }
+            // DeleteMe();
             //checkObstacleNearMe();
         }
     }
@@ -136,7 +156,18 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
 
     public void DeleteMe()
     {
-        SpawnManager.Instance.SendMessage("Despawn", gameObject);
+        switch (isLock)
+        {
+            case 0:
+                SpawnManager.Instance.SendMessage("Despawn", gameObject);
+                break;
+            case 1:
+                isLock = 0;
+                lockSprite.SetActive(false);
+                break;
+            default:
+                break;
+        }
     }
 
     private void FixedUpdate()
@@ -187,7 +218,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         // int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, .65f);
 
-        if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7)
+        if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7 && isLock < 1)
         {
             //fallingPoint.transform.position = hits[0].transform.position;
             //transform.position = hits[0].transform.position;
