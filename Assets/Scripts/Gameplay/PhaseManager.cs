@@ -14,7 +14,6 @@ public class PhaseManager : MonoBehaviour
     BoardState boardState;
 
     public int doneDropCount = 0;
-
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay;
@@ -96,6 +95,8 @@ public class PhaseManager : MonoBehaviour
             case Phase.GameEnd:
                 HandleGameEnd();
                 break;
+            default:
+                break;
         }
         
         OnPhaseChanged?.Invoke(newPhase);
@@ -119,15 +120,21 @@ public class PhaseManager : MonoBehaviour
 
     private IEnumerator RotateAndDrop(float angle)
     {
-        Environment.rotation *= Quaternion.AngleAxis(angle, Vector3.forward);
-        /*
+        //Environment.rotation *= Quaternion.AngleAxis(angle, Vector3.forward);
+        PhaseChange(Phase.rotating);
+        float rotationSpeed = 1000f;
         Quaternion rotateTo = Environment.rotation * Quaternion.AngleAxis(angle, Vector3.forward);
+
         while (Quaternion.Angle(Environment.rotation, rotateTo) > 0)
         {
-            Environment.rotation = Quaternion.Slerp(Environment.rotation, rotateTo, Time.deltaTime);
+            float newAngle = Quaternion.Angle(Environment.rotation, rotateTo);
+            float timeToComplete = newAngle / rotationSpeed;
+            float donePercentage = Mathf.Min(1F, Time.deltaTime / timeToComplete);
+            Environment.rotation = Quaternion.Slerp(Environment.rotation, rotateTo, donePercentage);
+            Debug.Log(donePercentage);
+            yield return new WaitForFixedUpdate();
         }
-        */
-        yield return new WaitForFixedUpdate();
+
         PhaseChange(Phase.Drop);
     }
 
@@ -209,5 +216,6 @@ public enum Phase
     Drop,
     Spawn,
     UpdateState,
-    GameEnd
+    GameEnd,
+    rotating
 }
