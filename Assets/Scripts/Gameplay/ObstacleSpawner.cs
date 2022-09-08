@@ -11,7 +11,7 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] List<GameObject> tier3 = new List<GameObject>();
 
     int[] gridLayout = new int[9];
-    int maxTier = 9;
+    int maxTier = 5;
 
     private void OnEnable()
     {
