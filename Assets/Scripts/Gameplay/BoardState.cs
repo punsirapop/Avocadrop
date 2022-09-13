@@ -29,6 +29,8 @@ public class BoardState : MonoBehaviour
     public static GameObject[] currentMatch = new GameObject[n*m];
     public matchPattern currentPattern;
 
+    public int currentScore = 0;
+
     public enum matchPattern
     {
         square,
@@ -146,15 +148,17 @@ public class BoardState : MonoBehaviour
             {
                 //explode this color match
                 yield return new WaitForSeconds(.5f);
+                // explode all from this match
                 for (int i = 0; i < currentMatchCount; i++)
                 {
                     Debug.Log("Exxxplooooooooooooooooooooosion!!!!!!");
                     currentMatch[i].GetComponent<Avocado>().isPartOfMatch = false;
                     currentMatch[i].GetComponent<Avocado>().DeleteMe();
                 }
-                //check pattern
-                //check bonus
-                //check score
+                giveScoreAndBonusForNumberOfMatch();
+                activateEffectForPattern();
+
+
                 updateState();
                 checkForMatchesAndDetectPatterns();
 
@@ -164,6 +168,56 @@ public class BoardState : MonoBehaviour
         else
         {
             PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
+        }
+    }
+
+    public void giveRainbow(int amount)
+    {
+
+    }
+    public void giveManualPowerUp()
+    {
+
+    }
+    public void giveScoreAndBonusForNumberOfMatch()
+    {
+        int score = 0;
+        if (currentMatchCount == 3)
+        {
+            score = 30;
+        }
+        else if (currentMatchCount == 4)
+        {
+            score = 50;
+            giveRainbow(1);
+        }
+        else if (currentMatchCount >= 5)
+        {
+            score = 100 + (currentMatchCount - 5)*100;
+            giveRainbow(currentMatchCount - 5);
+            giveManualPowerUp();
+        }
+
+        currentScore += score;
+    }
+
+    public void activateEffectForPattern()
+    {
+        if (currentPattern == matchPattern.square)
+        {
+
+        }
+        else if (currentPattern == matchPattern.cross)
+        {
+
+        }
+        else if (currentPattern == matchPattern.L_shape1 || currentPattern == matchPattern.L_shape2 || currentPattern == matchPattern.L_shape3 || currentPattern == matchPattern.L_shape4)
+        {
+
+        }
+        else if (currentPattern == matchPattern.T_shape1 || currentPattern == matchPattern.T_shape2 || currentPattern == matchPattern.T_shape3 || currentPattern == matchPattern.T_shape4)
+        {
+
         }
     }
 

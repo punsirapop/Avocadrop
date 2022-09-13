@@ -16,7 +16,7 @@ public class PhaseManager : MonoBehaviour
     public int doneDropCount = 0;
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
-    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay;
+    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay, scoreDisplay;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
     bool isGameEnded = false;
@@ -42,6 +42,7 @@ public class PhaseManager : MonoBehaviour
         currentPhaseDisplay.SetText("Current Phase: " + phase);
         dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
         patternFoundDisplay.SetText("Pattern Found: " + boardState.currentPattern);
+        scoreDisplay.SetText(""+boardState.currentScore);
 
         if (phase == Phase.PlayerAction)
         {
