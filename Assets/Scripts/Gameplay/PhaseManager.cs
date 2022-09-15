@@ -32,17 +32,17 @@ public class PhaseManager : MonoBehaviour
     private void Start()
     {
         // Debug.Log("Changing Phase from Start");
+        boardState = GetComponent<BoardState>();
         PhaseChange(Phase.Preparation);
         Time.timeScale = 1f;
     }
 
     private void Update()
     {
-        boardState = GetComponent<BoardState>();
         currentPhaseDisplay.SetText("Current Phase: " + phase);
         dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
-        patternFoundDisplay.SetText("Pattern Found: " + boardState.currentPattern);
-        scoreDisplay.SetText(""+boardState.currentScore);
+        patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
+        scoreDisplay.SetText(""+BoardState.currentScore);
 
         if (phase == Phase.PlayerAction)
         {
