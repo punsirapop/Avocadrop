@@ -33,6 +33,7 @@ public class PhaseManager : MonoBehaviour
     {
         // Debug.Log("Changing Phase from Start");
         boardState = GetComponent<BoardState>();
+        BoardState.currentScore = 0;
         PhaseChange(Phase.Preparation);
         Time.timeScale = 1f;
     }
