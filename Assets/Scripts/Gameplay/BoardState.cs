@@ -177,7 +177,8 @@ public class BoardState : MonoBehaviour
     }
     public void giveManualPowerUp()
     {
-
+        int randomPowerIndex = UnityEngine.Random.Range(0,5);
+        PowerUpsManager.Instance.getPowerUp(randomPowerIndex);
     }
     public void giveScoreAndBonusForNumberOfMatch()
     {
