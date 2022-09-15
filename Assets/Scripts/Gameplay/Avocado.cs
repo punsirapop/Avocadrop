@@ -13,8 +13,18 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     public colorText colorEnum;
     int isLock = 0;
 
+    float timeToGo;
+    float rainbowColorSwitchInterval = 0.1f;
+
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] GameObject lockSprite, permLockSprite;
+
+    [SerializeField]
+    Gradient gradient;
+    float duration = 1.0f;
+    float t = 0f;
+
+    bool gradientIncreasing = true;
 
     public enum colorText
     {
@@ -30,10 +40,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     private void OnEnable()
     {
         
-        Debug.Log("rainbow: "+BoardState.rainbowLeftToDrop);  
         if (BoardState.rainbowLeftToDrop > 0)
         {
-            Debug.Log("HEreerertergsgh");
             colorEnum = colorText.rainbow;
             BoardState.rainbowLeftToDrop--;
         }
@@ -96,7 +104,9 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         color = spriteRenderer.color;
         */
         //fallingPoint.transform.position = transform.position;
-        
+
+        timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
+
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -179,11 +189,31 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             //spriteRenderer.color = Color.black;
             Drop();
         }
-
         if (colorEnum.Equals(colorText.rainbow))
         {
-            applyColor(randomColor());
+            //if (Time.fixedTime >= timeToGo)
+            //{
+            //    applyColor(randomColor());
+            //    timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
+            //}
+            if (gradientIncreasing)
+            {
+                t += Time.deltaTime / duration;
+                if (t > 1f) gradientIncreasing = false;
+            }
+            else
+            {
+                t -= Time.deltaTime / duration;
+                if (t < 0f) gradientIncreasing = true;
+            }
+            
+            float value = Mathf.Lerp(0f, 1f, t);
+            
+            spriteRenderer.color = gradient.Evaluate(value);
         }
+
+        
+
         /*
         else
         {
