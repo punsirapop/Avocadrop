@@ -11,15 +11,15 @@ public class PhaseManager : MonoBehaviour
     public static event Action<Phase> OnPhaseChanged;
     public bool isDropping = false;
     public Phase phase;
-    BoardState boardState;
-
     public int doneDropCount = 0;
+
     [SerializeField] GameObject AvoCollection;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
     bool isGameEnded = false;
+    int revealRequest = 0;
 
     private void Awake()
     {
@@ -38,10 +38,9 @@ public class PhaseManager : MonoBehaviour
 
     private void Update()
     {
-        boardState = GetComponent<BoardState>();
         currentPhaseDisplay.SetText("Current Phase: " + phase);
         dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
-        patternFoundDisplay.SetText("Pattern Found: " + boardState.currentPattern);
+        patternFoundDisplay.SetText("Pattern Found: " + BoardState.Instance.currentPattern);
 
         if (phase == Phase.PlayerAction)
         {
@@ -76,10 +75,8 @@ public class PhaseManager : MonoBehaviour
         switch (phase)
         {
             case Phase.Preparation:
-                HandlePreparation();
                 break;
             case Phase.PlayerAction:
-                HandlePlayerAction();
                 break;
             case Phase.CheckExplode:
                 HandleCheckExplode();
@@ -95,6 +92,9 @@ public class PhaseManager : MonoBehaviour
             case Phase.GameEnd:
                 HandleGameEnd();
                 break;
+            case Phase.Revealing:
+                HandleRevealing();
+                break;
             default:
                 break;
         }
@@ -102,20 +102,16 @@ public class PhaseManager : MonoBehaviour
         OnPhaseChanged?.Invoke(newPhase);
     }
 
-    private void HandlePreparation()
+    private void HandleRevealing()
     {
-        
-    }
-
-    private void HandlePlayerAction()
-    {
-        
+        MazeSpawner.Instance.Reveal(5 * revealRequest);
+        PhaseChange(Phase.PlayerAction);
     }
 
     private void HandleCheckExplode()
     {
         Debug.Log("In handle check explode");
-        StartCoroutine(boardState.explodeAllIfCan());
+        StartCoroutine(BoardState.Instance.explodeAllIfCan());
     }
 
     private IEnumerator RotateAndDrop(float angle)
@@ -175,10 +171,8 @@ public class PhaseManager : MonoBehaviour
     private IEnumerator HandleUpdateState()
     {
         yield return new WaitUntil(() => doneDropCount == SpawnManager.Instance.capacity);
-        boardState.updateState();
+        BoardState.Instance.updateState();
         PhaseChange(Phase.CheckExplode);
-
-
     }
 
     private void HandleGameEnd()
@@ -189,6 +183,11 @@ public class PhaseManager : MonoBehaviour
     public void EndMe()
     {
         isGameEnded = true;
+    }
+
+    public void RevealRequest()
+    {
+        revealRequest++;
     }
 
     /*
@@ -217,5 +216,6 @@ public enum Phase
     Spawn,
     UpdateState,
     GameEnd,
-    rotating
+    rotating,
+    Revealing
 }

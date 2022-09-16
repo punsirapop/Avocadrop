@@ -15,7 +15,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        PhaseManager.OnPhaseChanged += HandlePhaseChanged;
+        // PhaseManager.OnPhaseChanged += HandlePhaseChanged;
     }
 
     private void HandlePhaseChanged(Phase phase)

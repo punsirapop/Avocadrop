@@ -30,6 +30,7 @@ public class Timer : MonoBehaviour
         if(phase == Phase.PlayerAction && !isPrepared)
         {
             isTimeRunning = true;
+            PhaseManager.Instance.InvokeRepeating("RevealRequest", 0f, 5f);
             isPrepared = true;
         }
 
@@ -61,5 +62,10 @@ public class Timer : MonoBehaviour
                 isTimeRunning = false;
             }
         }
+    }
+
+    public void AddTime(float time)
+    {
+        timeRemaining += time;
     }
 }

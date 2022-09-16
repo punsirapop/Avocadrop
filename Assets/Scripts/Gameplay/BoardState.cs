@@ -163,7 +163,7 @@ public class BoardState : MonoBehaviour
         }
         else
         {
-            PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
+            PhaseManager.Instance.PhaseChange(Phase.Revealing);
         }
     }
 
@@ -463,5 +463,3 @@ public class BoardState : MonoBehaviour
         return newArray;
     }
 }
-
-
