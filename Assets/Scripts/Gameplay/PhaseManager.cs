@@ -18,7 +18,7 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay, scoreDisplay;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
-    bool isGameEnded = false;
+    public bool isGameEnded = false;
     int revealRequest = 0;
 
     private void Awake()

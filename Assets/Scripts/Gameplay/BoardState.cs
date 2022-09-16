@@ -126,8 +126,13 @@ public class BoardState : MonoBehaviour
         if (!PhaseManager.Instance.isGameEnded && Time.fixedTime >= timeToGo)
         {
             rerollBoardPlaceHolder();
-            timeToGo = Time.fixedTime + rerollInterval;
+            resetRerollTimer();
         }
+    }
+
+    void resetRerollTimer()
+    {
+        timeToGo = Time.fixedTime + rerollInterval;
     }
 
     void rerollBoardPlaceHolder()
@@ -164,7 +169,7 @@ public class BoardState : MonoBehaviour
         {
             // reset timer for reroll and lock penalty
             rotationSinceLastMatch = 0;
-            timeToGo = Time.fixedTime + rerollInterval;
+            resetRerollTimer();
 
             while (currentMatchCount >= 3)
             {
