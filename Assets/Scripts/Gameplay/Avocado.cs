@@ -13,9 +13,6 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     public colorText colorEnum;
     int isLock = 0;
 
-    float timeToGo;
-    float rainbowColorSwitchInterval = 0.1f;
-
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] GameObject lockSprite, permLockSprite;
 
@@ -105,7 +102,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         */
         //fallingPoint.transform.position = transform.position;
 
-        timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
+        //timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
 
     }
 
@@ -212,11 +209,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         }
         if (colorEnum.Equals(colorText.rainbow))
         {
-            //if (Time.fixedTime >= timeToGo)
-            //{
-            //    applyColor(randomColor());
-            //    timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
-            //}
+            
             if (gradientIncreasing)
             {
                 t += Time.deltaTime / duration;

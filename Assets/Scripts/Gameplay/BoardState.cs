@@ -33,6 +33,9 @@ public class BoardState : MonoBehaviour
     public static int currentScore = 0;
     public static int rotationSinceLastMatch = 0;
 
+    public static float timeToGo;
+    float rerollInterval = 10f;
+
     public enum matchPattern
     {
         square,
@@ -118,9 +121,24 @@ public class BoardState : MonoBehaviour
 
     //}
 
+    private void FixedUpdate()
+    {
+        if (!PhaseManager.Instance.isGameEnded && Time.fixedTime >= timeToGo)
+        {
+            rerollBoardPlaceHolder();
+            timeToGo = Time.fixedTime + rerollInterval;
+        }
+    }
+
+    void rerollBoardPlaceHolder()
+    {
+        Debug.Log("Rerolled board");
+    }
+
     private void Start()
     {
-        if(Instance == null)
+        timeToGo = Time.fixedTime + rerollInterval;
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -144,7 +162,10 @@ public class BoardState : MonoBehaviour
         Debug.Log("Current Match amount: " + currentMatchCount);
         if (currentMatchCount >= 3)
         {
+            // reset timer for reroll and lock penalty
             rotationSinceLastMatch = 0;
+            timeToGo = Time.fixedTime + rerollInterval;
+
             while (currentMatchCount >= 3)
             {
                 //explode this color match
