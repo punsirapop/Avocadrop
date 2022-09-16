@@ -136,6 +136,27 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void lockMe()
+    {
+        isLock = (isLock + 1) % 3;
+
+        lockSprite.SetActive(false);
+        permLockSprite.SetActive(false);
+        gameObject.layer = 8;
+        switch (isLock)
+        {
+            case 0:
+                break;
+            case 1:
+                lockSprite.SetActive(true);
+                break;
+            case 2:
+                permLockSprite.SetActive(true);
+                gameObject.layer = 9;
+                break;
+        }
+    }
+
     //test lasser
     public void checkObstacleNearMe()
     {

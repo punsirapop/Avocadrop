@@ -5,6 +5,7 @@ using System;
 
 public class BoardState : MonoBehaviour
 {
+    [SerializeField] GameObject AvoCollection;
     public static BoardState Instance;
     public bool fallingDone;
     public const int n = 9;
@@ -29,8 +30,8 @@ public class BoardState : MonoBehaviour
     public static GameObject[] currentMatch = new GameObject[n*m];
     public static matchPattern currentPattern;
     public static int rainbowLeftToDrop = 0;
-
     public static int currentScore = 0;
+    public static int rotationSinceLastMatch = 0;
 
     public enum matchPattern
     {
@@ -143,8 +144,7 @@ public class BoardState : MonoBehaviour
         Debug.Log("Current Match amount: " + currentMatchCount);
         if (currentMatchCount >= 3)
         {
-            Debug.Log("Passed >= 3 check");
-
+            rotationSinceLastMatch = 0;
             while (currentMatchCount >= 3)
             {
                 //explode this color match
@@ -226,15 +226,11 @@ public class BoardState : MonoBehaviour
     public void updateState()
     {
         int count = 0;
+
+        checkLock();
+
         //reset arrays
         gameState = ReturnRectangularGameObjectArray(9, 9);
-        //foreach (GameObject avocado in currentMatch)
-        //    {
-        //        if (avocado)
-        //        {
-        //            avocado.GetComponent<Avocado>().isPartOfMatch = false;
-        //        }
-        //    }
         currentMatch = new GameObject[n*m];
         for (int i = 0; i < n; i++)
         {
@@ -247,7 +243,6 @@ public class BoardState : MonoBehaviour
                 {
                     count++;
                     Debug.Log(avocadoFound.gameObject.GetComponent<Transform>().position);
-                    //Debug.Log(avocadoFound.gameObject.GetComponent<Avocado>().color);
                     gameState[i][j] = avocadoFound.gameObject;
                 }
 
@@ -255,6 +250,26 @@ public class BoardState : MonoBehaviour
         }
 
 
+    }
+
+    public void checkLock()
+    {
+        int rotationUntilLock = 5;
+        if (rotationSinceLastMatch < rotationUntilLock) return;
+
+        bool found = false;
+        Avocado[] avos =  AvoCollection.GetComponentsInChildren<Avocado>();
+
+        while (!found)
+        {
+            int random = UnityEngine.Random.Range(0, avos.Length);
+            if (avos[random].gameObject.layer == 8)
+            {
+                found = true;
+                avos[random].lockMe();
+                rotationSinceLastMatch = 0;
+            }
+        }
     }
 
     public void checkForMatchesAndDetectPatterns()

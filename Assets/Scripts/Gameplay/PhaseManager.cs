@@ -53,17 +53,20 @@ public class PhaseManager : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
+                BoardState.rotationSinceLastMatch++;
                 // Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(90f));
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
                 // Debug.Log("Changing Phase from PlayerAction");
+                BoardState.rotationSinceLastMatch++;
                 StartCoroutine(RotateAndDrop(-90f));
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
             {
                 // Debug.Log("Changing Phase from PlayerAction");
+                BoardState.rotationSinceLastMatch++;
                 StartCoroutine(RotateAndDrop(180f));
             }
         }
