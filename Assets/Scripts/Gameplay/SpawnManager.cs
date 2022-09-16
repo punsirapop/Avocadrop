@@ -2,21 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using System;
 
 public class SpawnManager : MonoBehaviour
 {
+    public static SpawnManager Instance;
+
     [SerializeField] Transform AvoCollection;
     [SerializeField] Transform UnusedCollection;
     [SerializeField] GameObject Avocado;
 
     ObjectPool<GameObject> pool;
-    int capacity = 20, max = 80;
+    public int capacity = 20, max = 80;
     int msgReceivedCount;
     bool isReady = false, msgSent = false;
     List<Vector3> possibleSpaces = new List<Vector3>();
 
     private void OnEnable()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+
         PhaseManager.OnPhaseChanged += HandlePhaseChanged;
 
         pool = new ObjectPool<GameObject>(
@@ -42,6 +50,16 @@ public class SpawnManager : MonoBehaviour
     {
         if (phase == Phase.Spawn)
         {
+            StartCoroutine(LoopSpawn());
+            /*
+            while (AvoCollection.childCount < capacity)
+            {
+                Debug.Log("Spawning an Avocado");
+                SingleSpawn();
+            }
+            Debug.Log("Changing Phase from SpawnManager - spawner");
+            PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
+            /*
             if(AvoCollection.childCount < capacity)
             {
                 Debug.Log("Spawning an Avocado");
@@ -52,10 +70,23 @@ public class SpawnManager : MonoBehaviour
                 Debug.Log("Changing Phase from SpawnManager - spawner");
                 PhaseManager.Instance.PhaseChange(Phase.PlayerAction);
             }
+            */
         }
     }
 
-    private void SingleSpawn()
+    private IEnumerator LoopSpawn()
+    {
+        while (AvoCollection.childCount < capacity)
+        {
+            Debug.Log("Spawning an Avocado");
+            GameObject avo = SingleSpawn();
+            yield return new WaitWhile(() => avo.GetComponent<Avocado>().pleaseDrop);
+        }
+        Debug.Log("Changing Phase from SpawnManager - spawner");
+        PhaseManager.Instance.PhaseChange(Phase.UpdateState);
+    }
+
+    private GameObject SingleSpawn()
     {
         isReady = false;
         msgSent = false;
@@ -65,10 +96,11 @@ public class SpawnManager : MonoBehaviour
         {
             if (isReady)
             {
-                Spawn();
-                Debug.Log("Changing Phase from SpawnManager - after spawn");
-                PhaseManager.Instance.PhaseChange(Phase.Drop);
-                break;
+                GameObject avo = Spawn();
+                // Debug.Log("Changing Phase from SpawnManager - after spawn");
+                avo.SendMessage("PleaseDrop");
+                // PhaseManager.Instance.PhaseChange(Phase.Drop);
+                return avo;
             }
         }
     }
@@ -102,12 +134,20 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private void Spawn()
+    private GameObject Spawn()
     {
-        int spawnIndex = Random.Range(0, possibleSpaces.Count);
+        int spawnIndex = UnityEngine.Random.Range(0, possibleSpaces.Count);
         Debug.Log("Dropping in - " + possibleSpaces[spawnIndex]);
 
         GameObject avo = pool.Get();
         avo.transform.position = possibleSpaces[spawnIndex];
+
+        return avo;
+    }
+
+    public void Despawn(GameObject avo)
+    {
+        Debug.Log("Despawning...");
+        pool.Release(avo);
     }
 }
