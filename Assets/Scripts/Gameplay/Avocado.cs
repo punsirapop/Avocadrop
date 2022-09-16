@@ -10,11 +10,21 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
 
     GameObject fallingPoint;
     Transform pointCollection;
-    colorText colorEnum;
+    public colorText colorEnum;
     int isLock = 0;
+
+    float timeToGo;
+    float rainbowColorSwitchInterval = 0.1f;
 
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] GameObject lockSprite, permLockSprite;
+
+    [SerializeField]
+    Gradient gradient;
+    float duration = 1.0f;
+    float t = 0f;
+
+    bool gradientIncreasing = true;
 
     public enum colorText
     {
@@ -24,22 +34,22 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         blue,
         magenta,
         cyan,
+        rainbow,
     }
 
     private void OnEnable()
     {
-        // PhaseManager.OnPhaseChanged += HandlePhaseChanged;
-
-        //pointCollection = GameObject.Find("PointCollection").transform;
-
-        //fallingPoint = new GameObject("fallingPoint");
-        //fallingPoint.layer = LayerMask.NameToLayer("fallingPoint");
-        //fallingPoint.transform.position = transform.position;
-        //fallingPoint.transform.parent = pointCollection;
-
-        //color = spriteRenderer.color;
-        colorEnum = randomColor();
-        applyColor(colorEnum);
+        
+        if (BoardState.rainbowLeftToDrop > 0)
+        {
+            colorEnum = colorText.rainbow;
+            BoardState.rainbowLeftToDrop--;
+        }
+        else
+        {
+            colorEnum = randomColor();
+            applyColor(colorEnum);
+        }
     }
 
     private void OnDisable()
@@ -55,7 +65,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         return colorList[index];
     }
 
-    private void applyColor(colorText colorEnum)
+    public void applyColor(colorText colorEnum)
     {
         switch (colorEnum)
         {
@@ -94,7 +104,9 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         color = spriteRenderer.color;
         */
         //fallingPoint.transform.position = transform.position;
-        
+
+        timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
+
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -177,6 +189,31 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             //spriteRenderer.color = Color.black;
             Drop();
         }
+        if (colorEnum.Equals(colorText.rainbow))
+        {
+            //if (Time.fixedTime >= timeToGo)
+            //{
+            //    applyColor(randomColor());
+            //    timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
+            //}
+            if (gradientIncreasing)
+            {
+                t += Time.deltaTime / duration;
+                if (t > 1f) gradientIncreasing = false;
+            }
+            else
+            {
+                t -= Time.deltaTime / duration;
+                if (t < 0f) gradientIncreasing = true;
+            }
+            
+            float value = Mathf.Lerp(0f, 1f, t);
+            
+            spriteRenderer.color = gradient.Evaluate(value);
+        }
+
+        
+
         /*
         else
         {

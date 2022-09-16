@@ -4415,6 +4415,7 @@ MonoBehaviour:
   currentPhaseDisplay: {fileID: 963370090}
   dropCountDisplay: {fileID: 1895464252}
   patternFoundDisplay: {fileID: 39904963}
+  scoreDisplay: {fileID: 1812122205}
 --- !u!114 &432950141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4445,7 +4446,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallingDone: 0
   cam: {fileID: 0}
-  currentPattern: 0
 --- !u!1001 &433040741
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -27,7 +27,10 @@ public class BoardState : MonoBehaviour
     GameObject[][] gameState;
     public static int currentMatchCount;
     public static GameObject[] currentMatch = new GameObject[n*m];
-    public matchPattern currentPattern;
+    public static matchPattern currentPattern;
+    public static int rainbowLeftToDrop = 0;
+
+    public static int currentScore = 0;
 
     public enum matchPattern
     {
@@ -146,15 +149,17 @@ public class BoardState : MonoBehaviour
             {
                 //explode this color match
                 yield return new WaitForSeconds(.5f);
+                // explode all from this match
                 for (int i = 0; i < currentMatchCount; i++)
                 {
                     Debug.Log("Exxxplooooooooooooooooooooosion!!!!!!");
                     currentMatch[i].GetComponent<Avocado>().isPartOfMatch = false;
                     currentMatch[i].GetComponent<Avocado>().DeleteMe();
                 }
-                //check pattern
-                //check bonus
-                //check score
+                giveScoreAndBonusForNumberOfMatch();
+                activateEffectForPattern();
+
+
                 updateState();
                 checkForMatchesAndDetectPatterns();
 
@@ -164,6 +169,57 @@ public class BoardState : MonoBehaviour
         else
         {
             PhaseManager.Instance.PhaseChange(Phase.Revealing);
+        }
+    }
+
+    public void giveRainbow(int amount)
+    {
+        rainbowLeftToDrop += amount;
+    }
+    public void giveManualPowerUp()
+    {
+        int randomPowerIndex = UnityEngine.Random.Range(0,5);
+        PowerUpsManager.Instance.getPowerUp(randomPowerIndex);
+    }
+    public void giveScoreAndBonusForNumberOfMatch()
+    {
+        int score = 0;
+        if (currentMatchCount == 3)
+        {
+            score = 30;
+        }
+        else if (currentMatchCount == 4)
+        {
+            score = 50;
+            giveRainbow(1);
+        }
+        else if (currentMatchCount >= 5)
+        {
+            score = 100 + (currentMatchCount - 5)*100;
+            giveRainbow(currentMatchCount - 5);
+            giveManualPowerUp();
+        }
+
+        currentScore += score;
+    }
+
+    public void activateEffectForPattern()
+    {
+        if (currentPattern == matchPattern.square)
+        {
+
+        }
+        else if (currentPattern == matchPattern.cross)
+        {
+
+        }
+        else if (currentPattern == matchPattern.L_shape1 || currentPattern == matchPattern.L_shape2 || currentPattern == matchPattern.L_shape3 || currentPattern == matchPattern.L_shape4)
+        {
+
+        }
+        else if (currentPattern == matchPattern.T_shape1 || currentPattern == matchPattern.T_shape2 || currentPattern == matchPattern.T_shape3 || currentPattern == matchPattern.T_shape4)
+        {
+
         }
     }
 
@@ -278,7 +334,7 @@ public class BoardState : MonoBehaviour
         {
             if (input[x][y] != null)
             {
-                if (visited[x][y] == 0 && input[x][y].GetComponent<Avocado>().color.Equals(key))
+                if (visited[x][y] == 0 && (input[x][y].GetComponent<Avocado>().color.Equals(key) || input[x][y].GetComponent<Avocado>().colorEnum.Equals(Avocado.colorText.rainbow)))
                 {
                     return true;
                 }
@@ -320,7 +376,7 @@ public class BoardState : MonoBehaviour
     public static void BFS(GameObject x, GameObject y, int i, int j, GameObject[][] input, Vector2 dir)
     {
         // terminating case for BFS
-        if (input[i][j] == null || x == null || y == null || !x.GetComponent<Avocado>().color.Equals(y.GetComponent<Avocado>().color))
+        if (input[i][j] == null || x == null || y == null || !(x.GetComponent<Avocado>().color.Equals(y.GetComponent<Avocado>().color) || x.GetComponent<Avocado>().colorEnum.Equals(Avocado.colorText.rainbow) || y.GetComponent<Avocado>().colorEnum.Equals(Avocado.colorText.rainbow)))
         {
             return;
         }
@@ -369,7 +425,7 @@ public class BoardState : MonoBehaviour
         {
             for (int j = 0; j < m; j++)
             {
-                if (visited[i][j] == 1 && input[i][j].GetComponent<Avocado>().color.Equals(key))
+                if (visited[i][j] == 1 && (input[i][j].GetComponent<Avocado>().color.Equals(key) || input[i][j].GetComponent<Avocado>().colorEnum.Equals(Avocado.colorText.rainbow)))
                 {
                     result[i][j] = visited[i][j];
                 }
@@ -387,6 +443,7 @@ public class BoardState : MonoBehaviour
     {
         int current_max = int.MinValue;
         Color bestColor = Color.black;
+        List<Avocado.colorText> colorList = new List<Avocado.colorText> { Avocado.colorText.green, Avocado.colorText.red, Avocado.colorText.yellow, Avocado.colorText.blue, Avocado.colorText.magenta, Avocado.colorText.cyan };
 
         for (int i = 0; i < n; i++)
         {
@@ -394,38 +451,82 @@ public class BoardState : MonoBehaviour
             {
                 if (input[i][j] != null)
                 {
-                    reset_visited();
-                    currentMatchCount = 0;
-
-                    // checking cell to the right
-                    if (j + 1 < m)
+                    if (input[i][j].GetComponent<Avocado>().colorEnum.Equals(Avocado.colorText.rainbow))
                     {
-                        BFS(input[i][j], input[i][j + 1], i, j, input, new Vector2(0,1));
-                    }
+                        foreach (Avocado.colorText colorToCheck in colorList)
+                        {
+                            input[i][j].GetComponent<Avocado>().applyColor(colorToCheck);
 
-                    // updating result
-                    if (currentMatchCount >= current_max)
-                    {
-                        current_max = currentMatchCount;
-                        bestColor = input[i][j].GetComponent<Avocado>().color;
-                        reset_result(input[i][j].GetComponent<Avocado>().color, input);
-                    }
-                    reset_visited();
-                    currentMatchCount = 0;
+                            reset_visited();
+                            currentMatchCount = 0;
 
-                    // checking cell downwards
-                    if (i + 1 < n)
-                    {
-                        BFS(input[i][j], input[i + 1][j], i, j, input, new Vector2(1,0));
-                    }
+                            // checking cell to the right
+                            if (j + 1 < m)
+                            {
+                                BFS(input[i][j], input[i][j + 1], i, j, input, new Vector2(0, 1));
+                            }
 
-                    // updating result
-                    if (currentMatchCount >= current_max)
-                    {
-                        current_max = currentMatchCount;
-                        bestColor = input[i][j].GetComponent<Avocado>().color;
-                        reset_result(input[i][j].GetComponent<Avocado>().color, input);
+                            // updating result
+                            if (currentMatchCount >= current_max)
+                            {
+                                current_max = currentMatchCount;
+                                bestColor = input[i][j].GetComponent<Avocado>().color;
+                                reset_result(input[i][j].GetComponent<Avocado>().color, input);
+                            }
+                            reset_visited();
+                            currentMatchCount = 0;
+
+                            // checking cell downwards
+                            if (i + 1 < n)
+                            {
+                                BFS(input[i][j], input[i + 1][j], i, j, input, new Vector2(1, 0));
+                            }
+
+                            // updating result
+                            if (currentMatchCount >= current_max)
+                            {
+                                current_max = currentMatchCount;
+                                bestColor = input[i][j].GetComponent<Avocado>().color;
+                                reset_result(input[i][j].GetComponent<Avocado>().color, input);
+                            }
+                        }
                     }
+                    else
+                    {
+                        reset_visited();
+                        currentMatchCount = 0;
+
+                        // checking cell to the right
+                        if (j + 1 < m)
+                        {
+                            BFS(input[i][j], input[i][j + 1], i, j, input, new Vector2(0, 1));
+                        }
+
+                        // updating result
+                        if (currentMatchCount >= current_max)
+                        {
+                            current_max = currentMatchCount;
+                            bestColor = input[i][j].GetComponent<Avocado>().color;
+                            reset_result(input[i][j].GetComponent<Avocado>().color, input);
+                        }
+                        reset_visited();
+                        currentMatchCount = 0;
+
+                        // checking cell downwards
+                        if (i + 1 < n)
+                        {
+                            BFS(input[i][j], input[i + 1][j], i, j, input, new Vector2(1, 0));
+                        }
+
+                        // updating result
+                        if (currentMatchCount >= current_max)
+                        {
+                            current_max = currentMatchCount;
+                            bestColor = input[i][j].GetComponent<Avocado>().color;
+                            reset_result(input[i][j].GetComponent<Avocado>().color, input);
+                        }
+                    }
+                        
                 } 
                 
             }
@@ -463,3 +564,5 @@ public class BoardState : MonoBehaviour
         return newArray;
     }
 }
+
+
