@@ -281,7 +281,6 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             // Debug.Log("Sent msg from " + transform.position);
             PhaseManager.Instance.isDropping = false;
             pleaseDrop = false;
-            Debug.Log("Done dropping");
             PhaseManager.Instance.doneDropCount++;
         }
     }

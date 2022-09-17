@@ -15,7 +15,7 @@ TagManager:
   - Grid
   - Avocado
   - Obstacle
-  - 
+  - Multiplier
   - 
   - 
   - 
@@ -40,4 +40,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: multiplier
+    uniqueID: 477707311
     locked: 0
