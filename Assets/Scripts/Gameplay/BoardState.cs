@@ -181,8 +181,11 @@ public class BoardState : MonoBehaviour
                 // explode all from this match
                 for (int i = 0; i < currentMatchCount; i++)
                 {
-                    currentMatch[i].GetComponent<Avocado>().isPartOfMatch = false;
-                    currentMatch[i].GetComponent<Avocado>().DeleteMe();
+                    if (currentMatch[i] != null)
+                    {
+                        currentMatch[i].GetComponent<Avocado>().isPartOfMatch = false;
+                        currentMatch[i].GetComponent<Avocado>().DeleteMe();
+                    }
                 }
                 giveScoreAndBonusForNumberOfMatch(multiplier);
                 multiplier = 1;

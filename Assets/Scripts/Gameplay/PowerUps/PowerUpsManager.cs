@@ -62,6 +62,8 @@ public class PowerUpsManager : MonoBehaviour
         */
     }
 
+
+
     // dont call while avo's moving
     // mode: 0 = plus, 1 = cross, 2 = whole
     // receive pos from outside later

@@ -57,6 +57,12 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     public void OnPointerUp(PointerEventData eventData)
     {
         isSelected = false;
+        if (PhaseManager.Instance.phase != Phase.PlayerAction)
+        {
+            transform.position = _position;
+            Range.SetActive(false);
+            return;
+        }
 
         if (Range.activeSelf)
         {
