@@ -31,6 +31,10 @@ public class BoardState : MonoBehaviour
     public static int rainbowLeftToDrop = 0;
     public static int currentScore = 0;
     public static int rotationSinceLastMatch = 0;
+    public static int xExplodeLeftTodo = 0;
+    public static int plusExplodeLeftTodo = 0;
+
+
 
     public static float timeToGo;
     float rerollInterval = 10f;
@@ -164,7 +168,6 @@ public class BoardState : MonoBehaviour
 
     public IEnumerator explodeAllIfCan()
     {
-        int multiplier = 1;
         checkForMatchesAndDetectPatterns();
         if (currentMatchCount >= 3)
         {
@@ -174,7 +177,7 @@ public class BoardState : MonoBehaviour
 
             while (currentMatchCount >= 3)
             {
-                multiplier = calculateMultiplier();
+                int multiplier = calculateMultiplier();
                 Debug.Log("Multiplier: "+multiplier);
                 //explode this color match
                 yield return new WaitForSeconds(.5f);
@@ -188,7 +191,6 @@ public class BoardState : MonoBehaviour
                     }
                 }
                 giveScoreAndBonusForNumberOfMatch(multiplier);
-                multiplier = 1;
                 activateEffectForPattern();
 
 
@@ -211,17 +213,20 @@ public class BoardState : MonoBehaviour
         // get positions of matches
         for (int i = 0; i < currentMatchCount; i++)
         {
-            Vector2 posToCheck = currentMatch[i].GetComponent<Transform>().position;
-            Debug.Log("Multiplier layer: "+LayerMask.GetMask("Multiplier"));
-            Collider2D multiplierFound = Physics2D.OverlapCircle(posToCheck, 0.1f, LayerMask.GetMask("Multiplier"));
-
-            if (multiplierFound)
+            if (currentMatch[i] != null)
             {
-                Debug.Log("Applying Multiplier.............................................................................................");
-                currentMultiplier *= multiplierFound.gameObject.GetComponent<Multiplier>().multiplierAmount;
-                // destroy used multiplier
-                Destroy(multiplierFound.gameObject);
+                Vector2 posToCheck = currentMatch[i].GetComponent<Transform>().position;
+                Debug.Log("Multiplier layer: " + LayerMask.GetMask("Multiplier"));
+                Collider2D multiplierFound = Physics2D.OverlapCircle(posToCheck, 0.1f, LayerMask.GetMask("Multiplier"));
 
+                if (multiplierFound)
+                {
+                    Debug.Log("Applying Multiplier.............................................................................................");
+                    currentMultiplier *= multiplierFound.gameObject.GetComponent<Multiplier>().multiplierAmount;
+                    // destroy used multiplier
+                    Destroy(multiplierFound.gameObject);
+
+                }
             }
         }
          return currentMultiplier;
@@ -313,11 +318,11 @@ public class BoardState : MonoBehaviour
         }
         else if (currentPattern == matchPattern.cross)
         {
-            PowerUpsManager.Instance.YeetusDeletus(0);
+            plusExplodeLeftTodo++;
         }
         else if (currentPattern == matchPattern.L_shape1 || currentPattern == matchPattern.L_shape2 || currentPattern == matchPattern.L_shape3 || currentPattern == matchPattern.L_shape4)
         {
-            PowerUpsManager.Instance.YeetusDeletus(1);
+            xExplodeLeftTodo++;
         }
         else if (currentPattern == matchPattern.T_shape1 || currentPattern == matchPattern.T_shape2 || currentPattern == matchPattern.T_shape3 || currentPattern == matchPattern.T_shape4)
         {

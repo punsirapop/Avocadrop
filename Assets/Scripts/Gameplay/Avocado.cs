@@ -57,6 +57,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     private colorText randomColor()
     {
         List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow, colorText.blue, colorText.magenta, colorText.cyan };
+        //List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow,};
+
         int index = Random.Range(0, colorList.Count);
         //Debug.Log(colorList[index]);
         return colorList[index];

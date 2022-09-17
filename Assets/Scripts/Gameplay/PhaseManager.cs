@@ -51,7 +51,17 @@ public class PhaseManager : MonoBehaviour
                 PhaseChange(Phase.GameEnd);
             }
 
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
+            if (BoardState.xExplodeLeftTodo>0)
+            {
+                BoardState.xExplodeLeftTodo--;
+                PowerUpsManager.Instance.YeetusDeletus(1);
+            }
+            else if (BoardState.plusExplodeLeftTodo > 0)
+            {
+                BoardState.plusExplodeLeftTodo--;
+                PowerUpsManager.Instance.YeetusDeletus(0);
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 BoardState.rotationSinceLastMatch++;
                 // Debug.Log("Changing Phase from PlayerAction");
