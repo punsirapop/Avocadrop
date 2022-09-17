@@ -33,6 +33,7 @@ public class BoardState : MonoBehaviour
     public static int rotationSinceLastMatch = 0;
     public static int xExplodeLeftTodo = 0;
     public static int plusExplodeLeftTodo = 0;
+    public static bool isRerolling = false;
 
 
 
@@ -142,6 +143,7 @@ public class BoardState : MonoBehaviour
     {
         Debug.Log("Rerolled board");
         gameObject.GetComponent<Timer>().AddTime(-20f);
+        isRerolling = true;
         PowerUpsManager.Instance.YeetusDeletus(2);
     }
 

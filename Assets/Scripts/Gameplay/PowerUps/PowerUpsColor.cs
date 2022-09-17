@@ -79,9 +79,17 @@ public class PowerUpsColor : MonoBehaviour
     {
         foreach (Collider2D c in deleteThese)
         {
+            if (!BoardState.isRerolling)
+            {
+                Debug.Log("points from powerup");
+                BoardState.currentScore += 10;
+            }
             c.SendMessage("DeleteMe");
         }
-
+        if (BoardState.isRerolling)
+        {
+            BoardState.isRerolling = false;
+        }
         PhaseManager.Instance.PhaseChange(Phase.Drop);
         gameObject.SetActive(false);
     }
