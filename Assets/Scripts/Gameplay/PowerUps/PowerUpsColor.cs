@@ -8,11 +8,11 @@ public class PowerUpsColor : MonoBehaviour
 {
     [SerializeField] List<Collider2D> myColliders = new List<Collider2D>();
     [SerializeField] GameObject Single;
-    [SerializeField] Transform SingleCollection;
 
     int capacity = 10, max = 20;
     ObjectPool<GameObject> pool;
 
+    Transform SingleCollection;
     ContactFilter2D filter = new ContactFilter2D();
     List<Collider2D> result = new List<Collider2D>();
     List<Collider2D> results = new List<Collider2D>();
@@ -20,6 +20,7 @@ public class PowerUpsColor : MonoBehaviour
 
     private void OnEnable()
     {
+        SingleCollection = GameObject.Find("SingleCollection").transform;
         if(pool == null)
         {
             Debug.Log("GEN NEW POOL");

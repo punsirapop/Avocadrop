@@ -24,8 +24,6 @@ public class BoardState : MonoBehaviour
     // stores the count of cells in the
     // largest connected component
 
-    public Camera cam;
-
     GameObject[][] gameState;
     public static int currentMatchCount;
     public static GameObject[] currentMatch = new GameObject[n*m];
@@ -197,7 +195,7 @@ public class BoardState : MonoBehaviour
         }
         else
         {
-            PhaseManager.Instance.PhaseChange(Phase.Revealing);
+            PhaseManager.Instance.PhaseChange(Phase.PreAction);
         }
     }
 
@@ -297,6 +295,7 @@ public class BoardState : MonoBehaviour
             giveManualPowerUp();
         }
 
+        gameObject.GetComponent<Timer>().AddTime(1f);
         currentScore += (score*multiplier);
     }
 
@@ -304,7 +303,7 @@ public class BoardState : MonoBehaviour
     {
         if (currentPattern == matchPattern.square)
         {
-
+            gameObject.GetComponent<Timer>().AddTime(15f);
         }
         else if (currentPattern == matchPattern.cross)
         {

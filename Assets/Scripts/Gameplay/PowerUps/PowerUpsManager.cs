@@ -62,6 +62,18 @@ public class PowerUpsManager : MonoBehaviour
         */
     }
 
+    // dont call while avo's moving
+    // mode: 0 = plus, 1 = cross, 2 = whole
+    // receive pos from outside later
+    public void YeetusDeletus(int mode)
+    {
+        Vector2 pos = new Vector2(4, 4);
+        mode += 4;
+        PURanges[mode].transform.position = pos;
+        PURanges[mode].SetActive(true);
+        PURanges[mode].SendMessage("Explode");
+    }
+
     /*
     public void usePowerUp(GameObject PU)
     {

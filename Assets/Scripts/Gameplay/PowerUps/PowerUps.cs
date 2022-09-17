@@ -23,7 +23,7 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     private void Update()
     {
-        if(Range.name == "Whole")
+        if(Range.name == "Color")
         {
             grid = Physics2D.OverlapCircle(transform.position, 0.1f, LayerMask.GetMask("Avocado"));
         }

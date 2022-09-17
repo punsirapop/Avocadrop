@@ -12,6 +12,8 @@ public class MazeSpawner : MonoBehaviour
 
     int n = 9, m = 9, wallCount = 0;
 
+    public int revealedSoFar = 0;
+
     List<GameObject> visitedList = new List<GameObject>();
     List<GameObject> toVisitList = new List<GameObject>();
     List<GameObject> toDestroyList = new List<GameObject>();
@@ -92,7 +94,7 @@ public class MazeSpawner : MonoBehaviour
         childList.RemoveAll(x => x.gameObject.activeSelf);
         Debug.Log(childList.Count);
 
-        Reveal(15);
+        Reveal(5);
 
         PhaseManager.OnPhaseChanged -= HandlePhaseChanged;
         PhaseManager.Instance.PhaseChange(Phase.Spawn);
@@ -179,6 +181,7 @@ public class MazeSpawner : MonoBehaviour
 
     public void Reveal(int num)
     {
+        revealedSoFar += num;
         num = (num < childList.Count) ? num : childList.Count;
 
         for (int i = 0; i < num; i++)
