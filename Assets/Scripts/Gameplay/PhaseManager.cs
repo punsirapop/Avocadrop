@@ -106,7 +106,7 @@ public class PhaseManager : MonoBehaviour
 
     private void HandlePreAction()
     {
-        MazeSpawner.Instance.Reveal(5 * revealRequest);
+        MazeSpawner.Instance.Reveal(revealRequest-MazeSpawner.Instance.revealedSoFar);
         PhaseChange(Phase.PlayerAction);
     }
 
