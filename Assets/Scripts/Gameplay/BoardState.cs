@@ -168,7 +168,7 @@ public class BoardState : MonoBehaviour
         }
         else
         {
-            PhaseManager.Instance.PhaseChange(Phase.Revealing);
+            PhaseManager.Instance.PhaseChange(Phase.PreAction);
         }
     }
 

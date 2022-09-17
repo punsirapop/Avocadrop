@@ -94,8 +94,8 @@ public class PhaseManager : MonoBehaviour
             case Phase.GameEnd:
                 HandleGameEnd();
                 break;
-            case Phase.Revealing:
-                HandleRevealing();
+            case Phase.PreAction:
+                HandlePreAction();
                 break;
             default:
                 break;
@@ -104,7 +104,7 @@ public class PhaseManager : MonoBehaviour
         OnPhaseChanged?.Invoke(newPhase);
     }
 
-    private void HandleRevealing()
+    private void HandlePreAction()
     {
         MazeSpawner.Instance.Reveal(5 * revealRequest);
         PhaseChange(Phase.PlayerAction);
@@ -219,5 +219,5 @@ public enum Phase
     UpdateState,
     GameEnd,
     rotating,
-    Revealing
+    PreAction
 }
