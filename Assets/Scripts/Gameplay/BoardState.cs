@@ -122,9 +122,9 @@ public class BoardState : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!PhaseManager.Instance.isGameEnded && Time.fixedTime >= timeToGo)
+        if (!PhaseManager.Instance.isGameEnded && Time.fixedTime >= timeToGo && PhaseManager.Instance.phase == Phase.PlayerAction)
         {
-            rerollBoardPlaceHolder();
+            rerollBoard();
             resetRerollTimer();
         }
     }
@@ -134,9 +134,11 @@ public class BoardState : MonoBehaviour
         timeToGo = Time.fixedTime + rerollInterval;
     }
 
-    void rerollBoardPlaceHolder()
+    void rerollBoard()
     {
         Debug.Log("Rerolled board");
+        gameObject.GetComponent<Timer>().AddTime(-20f);
+        PowerUpsManager.Instance.YeetusDeletus(2);
     }
 
     private void Start()
@@ -235,6 +237,7 @@ public class BoardState : MonoBehaviour
     public void generateMultiplier(int round)
     {
         List<Vector2> validPos = getNonObstaclePos();
+        if (validPos.Count == 0) return;
         for (int i = 0; i < round; i++)
         {
             int random = UnityEngine.Random.Range(0, validPos.Count);
@@ -307,11 +310,11 @@ public class BoardState : MonoBehaviour
         }
         else if (currentPattern == matchPattern.cross)
         {
-
+            PowerUpsManager.Instance.YeetusDeletus(0);
         }
         else if (currentPattern == matchPattern.L_shape1 || currentPattern == matchPattern.L_shape2 || currentPattern == matchPattern.L_shape3 || currentPattern == matchPattern.L_shape4)
         {
-
+            PowerUpsManager.Instance.YeetusDeletus(1);
         }
         else if (currentPattern == matchPattern.T_shape1 || currentPattern == matchPattern.T_shape2 || currentPattern == matchPattern.T_shape3 || currentPattern == matchPattern.T_shape4)
         {
