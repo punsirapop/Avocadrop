@@ -106,7 +106,6 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         //fallingPoint.transform.position = transform.position;
 
         timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
-
     }
 
     public void OnPointerClick(PointerEventData eventData)
