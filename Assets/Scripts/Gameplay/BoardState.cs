@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 
 public class BoardState : MonoBehaviour
@@ -31,6 +32,8 @@ public class BoardState : MonoBehaviour
     public static int rainbowLeftToDrop = 0;
 
     public static int currentScore = 0;
+
+    // public static int highscore = 0;
 
     public enum matchPattern
     {
@@ -201,6 +204,9 @@ public class BoardState : MonoBehaviour
         }
 
         currentScore += score;
+
+        // PlayerPrefs.SetInt("highscore", currentScore);
+        // Debug.Log("Your Score is " + PlayerPrefs.GetInt("highscore"));
     }
 
     public void activateEffectForPattern()

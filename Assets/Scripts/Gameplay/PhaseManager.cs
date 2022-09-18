@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
@@ -20,6 +21,10 @@ public class PhaseManager : MonoBehaviour
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
     bool isGameEnded = false;
     int revealRequest = 0;
+
+    // public Text _score;
+    // public TextMeshProUGUI highscoretext;
+    int highscore;
 
     private void Awake()
     {
@@ -67,6 +72,17 @@ public class PhaseManager : MonoBehaviour
                 StartCoroutine(RotateAndDrop(180f));
             }
         }
+
+        // _score.text = scoreDisplay.ToString();
+        // if (BoardState.currentScore > PlayerPrefs)
+        // PlayerPrefs.SetInt("highscoretext", BoardState.currentScore);
+
+        // PlayerPrefs.SetString("highscoretext", scoreDisplay.SetText);
+        // Debug.Log("Your Score is " + PlayerPrefs.GetString("highscoretext"));
+
+        PlayerPrefs.SetInt("highscore", BoardState.currentScore);
+        Debug.Log("Your Score is " + PlayerPrefs.GetInt("highscore"));
+
     }
 
     public void PhaseChange(Phase newPhase)

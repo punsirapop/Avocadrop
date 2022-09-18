@@ -40,6 +40,7 @@ public class Timer : MonoBehaviour
             {
                 button.SetActive(true);
             }
+
         }
     }
 
