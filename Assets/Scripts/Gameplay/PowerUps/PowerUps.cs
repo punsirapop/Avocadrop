@@ -7,7 +7,6 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 {
     public GameObject Range;
 
-    Collider2D grid;
     Vector3 _position, cursorPos;
     bool isSelected;
 
@@ -21,6 +20,44 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         Range = null;
     }
 
+    public void Enter(Collider2D collision)
+    {
+        if(Range != null && isSelected)
+        {
+            bool passed = false;
+            if (Range.name == "Color")
+            {
+                passed = (collision.gameObject.layer == 8);
+            }
+            else
+            {
+                passed = (collision.gameObject.layer == 7);
+            }
+
+            if (passed)
+            {
+                Range.SetActive(true);
+                Range.transform.position = collision.transform.position;
+                Range.SendMessage("ChangePos", SendMessageOptions.DontRequireReceiver);
+            }
+            else
+            {
+                // Range.SetActive(false);
+            }
+        }
+    }
+
+    public void Exit(Collider2D collision)
+    {
+        Collider2D grid = Physics2D.OverlapCircle(transform.position, 0.1f,
+            LayerMask.GetMask("Avocado") | LayerMask.GetMask("Grid"));
+        if(grid == null && Range != null)
+        {
+            Range.SetActive(false);
+        }
+    }
+
+    /*
     private void Update()
     {
         if(Range.name == "Color")
@@ -45,8 +82,8 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
                 Range.SetActive(false);
             }
         }
-       
     }
+    */
 
     public void OnPointerDown(PointerEventData eventData)
     {

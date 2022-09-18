@@ -4383,7 +4383,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallingDone: 0
-  cam: {fileID: 0}
 --- !u!1001 &433040741
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7699,6 +7698,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 720378615}
+  - component: {fileID: 720378616}
   m_Layer: 0
   m_Name: SingleCollection
   m_TagString: Untagged
@@ -7721,6 +7721,19 @@ Transform:
   m_Father: {fileID: 508644852}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &720378616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720378614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c9e6cd3bc4ead4eb4a22077ca6a82b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Single: {fileID: 5371993554881794582, guid: 834768d89cc662f43ba14a00926499e8, type: 3}
 --- !u!4 &720456207 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1867125318088993848, guid: d6be1ffacb8424246bf22aeca08b7ab9, type: 3}
@@ -9640,6 +9653,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Box: {fileID: 2143902221005211952, guid: 77b6f4b47ef59d349a77c2b9899be7c4, type: 3}
   BoxHolder: {fileID: 1172651015}
+  revealedSoFar: 0
 --- !u!1001 &921000417
 PrefabInstance:
   m_ObjectHideFlags: 0
