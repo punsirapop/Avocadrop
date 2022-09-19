@@ -39,9 +39,9 @@ public class PhaseManager : MonoBehaviour
 
     private void Update()
     {
-        currentPhaseDisplay.SetText("Current Phase: " + phase);
-        dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
-        patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
+        // currentPhaseDisplay.SetText("Current Phase: " + phase);
+        // dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
+        // patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
         scoreDisplay.SetText("Score: " + BoardState.currentScore);
 
         if (phase == Phase.PlayerAction)
