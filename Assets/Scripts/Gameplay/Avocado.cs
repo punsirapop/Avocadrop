@@ -108,6 +108,11 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
     }
 
+    private void LateUpdate()
+    {
+        // transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
@@ -231,6 +236,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         */
     }
 
+    /*
     private void LateUpdate()
     {
         //transform.position = Vector2.MoveTowards(transform.position, fallingPoint.transform.position, 3f);

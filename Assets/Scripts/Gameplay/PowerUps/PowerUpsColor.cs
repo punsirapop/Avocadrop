@@ -44,10 +44,11 @@ public class PowerUpsColor : MonoBehaviour
             results.AddRange(result);
         }
 
-        Color myColor = results.Find(x => (x.transform.position == transform.position)).GetComponent<Avocado>().color;
+        Avocado.colorText myColor = results.Find
+            (x => (x.transform.position == transform.position)).GetComponent<Avocado>().colorEnum;
         foreach (Collider2D c in results)
         {
-            if (c.GetComponent<Avocado>().color == myColor)
+            if (c.GetComponent<Avocado>().colorEnum == myColor)
             {
                 deleteThese.Add(c);
                 GameObject single = PowerUpsSinglePool.singlePool.Get();
