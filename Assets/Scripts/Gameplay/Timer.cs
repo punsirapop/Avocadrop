@@ -6,7 +6,6 @@ using TMPro;
 public class Timer : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI timeDisplay;
-    [SerializeField] List<GameObject> Buttons;
 
     float timeRemaining = 5f;
     bool isTimeRunning = false, isPrepared = false;
@@ -32,14 +31,6 @@ public class Timer : MonoBehaviour
             isTimeRunning = true;
             PhaseManager.Instance.InvokeRepeating("RevealRequest", 0f, 20f);
             isPrepared = true;
-        }
-
-        if(phase == Phase.GameEnd)
-        {
-            foreach (GameObject button in Buttons)
-            {
-                button.SetActive(true);
-            }
         }
     }
 

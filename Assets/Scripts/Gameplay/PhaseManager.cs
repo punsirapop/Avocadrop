@@ -15,7 +15,7 @@ public class PhaseManager : MonoBehaviour
     public bool isGameEnded = false;
     public bool isPaused = false;
 
-    [SerializeField] GameObject AvoCollection, PauseLid;
+    [SerializeField] GameObject AvoCollection, PauseLid, GameCanvas, EndCanvas;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay, scoreDisplay;
 
@@ -40,7 +40,12 @@ public class PhaseManager : MonoBehaviour
 
     private void Update()
     {
-        // currentPhaseDisplay.SetText("Current Phase: " + phase);
+        if (isGameEnded)
+        {
+            PhaseChange(Phase.GameEnd);
+        }
+
+        currentPhaseDisplay.SetText("Current Phase: " + phase);
         // dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
         // patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
         scoreDisplay.SetText(BoardState.currentScore.ToString());
@@ -61,11 +66,6 @@ public class PhaseManager : MonoBehaviour
 
         if (phase == Phase.PlayerAction && !isPaused)
         {
-            if (isGameEnded)
-            {
-                PhaseChange(Phase.GameEnd);
-            }
-
             if (BoardState.xExplodeLeftTodo>0)
             {
                 BoardState.xExplodeLeftTodo--;
@@ -208,11 +208,15 @@ public class PhaseManager : MonoBehaviour
 
     private void HandleGameEnd()
     {
-        isGameEnded = true;
+        Debug.Log("HANDLING THE END");
+        PauseLid.SetActive(true);
+        GameCanvas.SetActive(false);
+        EndCanvas.SetActive(true);
     }
 
     public void EndMe()
     {
+        Debug.Log("Initiate Summarization Sequence");
         isGameEnded = true;
     }
 
