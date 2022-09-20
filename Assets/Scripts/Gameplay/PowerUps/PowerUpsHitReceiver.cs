@@ -6,11 +6,12 @@ public class PowerUpsHitReceiver : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        SendMessageUpwards("Enter", collision);
+        if (!PhaseManager.Instance.isPaused) SendMessageUpwards("Enter", collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        SendMessageUpwards("Exit", collision, SendMessageOptions.DontRequireReceiver);
+        if (!PhaseManager.Instance.isPaused) 
+            SendMessageUpwards("Exit", collision, SendMessageOptions.DontRequireReceiver);
     }
 }

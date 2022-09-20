@@ -8,7 +8,7 @@ public class Timer : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeDisplay;
     [SerializeField] List<GameObject> Buttons;
 
-    float timeRemaining = 100f;
+    float timeRemaining = 5f;
     bool isTimeRunning = false, isPrepared = false;
 
     private void OnEnable()
@@ -30,7 +30,7 @@ public class Timer : MonoBehaviour
         if(phase == Phase.PlayerAction && !isPrepared)
         {
             isTimeRunning = true;
-            PhaseManager.Instance.InvokeRepeating("RevealRequest", 0f, 5f);
+            PhaseManager.Instance.InvokeRepeating("RevealRequest", 0f, 20f);
             isPrepared = true;
         }
 

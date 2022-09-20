@@ -12,13 +12,14 @@ public class PhaseManager : MonoBehaviour
     public bool isDropping = false;
     public Phase phase;
     public int doneDropCount = 0;
+    public bool isGameEnded = false;
+    public bool isPaused = false;
 
-    [SerializeField] GameObject AvoCollection;
+    [SerializeField] GameObject AvoCollection, PauseLid;
     [SerializeField] Transform Environment;
     [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay, scoreDisplay;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
-    public bool isGameEnded = false;
     int revealRequest = 0;
 
     private void Awake()
@@ -42,9 +43,23 @@ public class PhaseManager : MonoBehaviour
         // currentPhaseDisplay.SetText("Current Phase: " + phase);
         // dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
         // patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
-        scoreDisplay.SetText("Score: " + BoardState.currentScore);
+        scoreDisplay.SetText(BoardState.currentScore.ToString());
 
-        if (phase == Phase.PlayerAction)
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
+        if (isPaused)
+        {
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
+
+        if (phase == Phase.PlayerAction && !isPaused)
         {
             if (isGameEnded)
             {
@@ -185,6 +200,7 @@ public class PhaseManager : MonoBehaviour
 
     private IEnumerator HandleUpdateState()
     {
+        PauseLid.SetActive(false);
         yield return new WaitUntil(() => doneDropCount == SpawnManager.Instance.capacity);
         BoardState.Instance.updateState();
         PhaseChange(Phase.CheckExplode);
@@ -203,6 +219,12 @@ public class PhaseManager : MonoBehaviour
     public void RevealRequest()
     {
         revealRequest++;
+    }
+
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+        PauseLid.SetActive(isPaused);
     }
 
     /*

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Avocado : MonoBehaviour, IPointerClickHandler
+public class Avocado : MonoBehaviour
 {
     public Color color;
     public bool pleaseDrop = false, isPartOfMatch;
@@ -108,6 +108,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
 
     }
 
+    /*
     public void OnPointerClick(PointerEventData eventData)
     {
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
@@ -134,6 +135,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             //checkObstacleNearMe();
         }
     }
+    */
 
     public void lockMe()
     {
@@ -180,10 +182,10 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             }
 
             if (hits.Length == 1 && hits[0].collider.gameObject.layer == 9)
-                {
-                    Debug.Log("hit obstacle!!!!!!!!!!!!!!!!!!");
-                }
-    }
+            {
+                Debug.Log("hit obstacle!!!!!!!!!!!!!!!!!!");
+            }
+        }
     }
 
     public void DeleteMe()
@@ -268,8 +270,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     public void Drop()
     {
         // Debug.Log("Dropping...");
-        // int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, .65f);
+        int layerMask = ~(LayerMask.GetMask("Default")) & ~(LayerMask.GetMask("Multiplier"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, .65f, layerMask);
 
         if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7 && isLock < 1)
         {

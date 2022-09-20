@@ -51,7 +51,7 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     {
         Collider2D grid = Physics2D.OverlapCircle(transform.position, 0.1f,
             LayerMask.GetMask("Avocado") | LayerMask.GetMask("Grid"));
-        if(grid == null && Range != null)
+        if((Range.name == "Color" && grid.gameObject.layer != 8) || (Range != null && grid == null))
         {
             Range.SetActive(false);
         }
@@ -87,37 +87,40 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        isSelected = true;
+        if (!PhaseManager.Instance.isPaused) isSelected = true;
         // Range.SetActive(isSelected);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        isSelected = false;
-        if (PhaseManager.Instance.phase != Phase.PlayerAction)
+        if (!PhaseManager.Instance.isPaused)
         {
-            transform.position = _position;
-            Range.SetActive(false);
-            return;
-        }
+            isSelected = false;
+            if (PhaseManager.Instance.phase != Phase.PlayerAction)
+            {
+                transform.position = _position;
+                Range.SetActive(false);
+                return;
+            }
 
-        if (Range.activeSelf)
-        {
-            // PowerUpsManager.Instance.usePowerUp(gameObject);
-            Range.SendMessage("Explode");
-            transform.position = _position;
-            gameObject.SetActive(false);
+            if (Range.activeSelf)
+            {
+                // PowerUpsManager.Instance.usePowerUp(gameObject);
+                Range.SendMessage("Explode");
+                transform.position = _position;
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                transform.position = _position;
+            }
+            // Range.SetActive(isSelected);
         }
-        else
-        {
-            transform.position = _position;
-        }
-        // Range.SetActive(isSelected);
     }
 
     public void OnPointerMove(PointerEventData eventData)
     {
-        if (PhaseManager.Instance.phase == Phase.PlayerAction && isSelected)
+        if (PhaseManager.Instance.phase == Phase.PlayerAction && isSelected && !PhaseManager.Instance.isPaused)
         {
             cursorPos = Camera.main.ScreenToWorldPoint(eventData.position);
             transform.position = new Vector2(cursorPos.x, cursorPos.y);
