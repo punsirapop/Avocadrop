@@ -38,6 +38,10 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
+        if (timeRemaining < 0)
+        {
+            timeRemaining = 0;
+        }
         float minute = Mathf.FloorToInt(timeRemaining / 60);
         float second = Mathf.FloorToInt(timeRemaining % 60);
         timeDisplay.text = string.Format("{0:00}:{1:00}", minute, second);

@@ -34,6 +34,7 @@ public class BoardState : MonoBehaviour
     public static int xExplodeLeftTodo = 0;
     public static int plusExplodeLeftTodo = 0;
     public static bool isRerolling = false;
+    public static int currentStreak = 0;
 
 
 
@@ -136,7 +137,7 @@ public class BoardState : MonoBehaviour
         }
     }
 
-    void resetRerollTimer()
+    public void resetRerollTimer()
     {
         timeToGo = Time.fixedTime + rerollInterval;
     }
@@ -183,6 +184,7 @@ public class BoardState : MonoBehaviour
             {
                 int multiplier = calculateMultiplier();
                 Debug.Log("Multiplier: "+multiplier);
+                currentStreak++;
                 //explode this color match
                 yield return new WaitForSeconds(.5f);
                 // explode all from this match
@@ -311,7 +313,14 @@ public class BoardState : MonoBehaviour
         }
 
         gameObject.GetComponent<Timer>().AddTime(1f);
-        currentScore += (score*multiplier);
+        float bonusFromStreak = calculateBonusFromStreak();
+        currentScore += (int)Math.Floor(score*multiplier*bonusFromStreak);
+    }
+
+    public float calculateBonusFromStreak()
+    {
+        float multiplierPerStreak = 0.02f;
+        return 1 + (multiplierPerStreak * currentStreak);
     }
 
     public void activateEffectForPattern()
