@@ -7,6 +7,8 @@ public class PowerUpsRange : MonoBehaviour
     [SerializeField] List<Collider2D> myColliders = new List<Collider2D>();
     public void Explode()
     {
+        BoardState.Instance.resetRerollTimer();
+        Debug.Log("Time to reroll reset");
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(LayerMask.GetMask("Avocado"));
         List<Collider2D> result = new List<Collider2D>();
