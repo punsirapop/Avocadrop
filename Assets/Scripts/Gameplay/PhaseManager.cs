@@ -17,7 +17,7 @@ public class PhaseManager : MonoBehaviour
 
     [SerializeField] GameObject AvoCollection, PauseLid, GameCanvas, EndCanvas;
     [SerializeField] Transform Environment;
-    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay, scoreDisplay;
+    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay, scoreDisplay, streak,streakMultiplier;
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
     int revealRequest = 0;
