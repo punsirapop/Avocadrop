@@ -35,6 +35,7 @@ public class BoardState : MonoBehaviour
     public static int plusExplodeLeftTodo = 0;
     public static bool isRerolling = false;
     public static int currentStreak = 0;
+    public static float currentStreakBonus = 1;
 
 
 
@@ -143,6 +144,8 @@ public class BoardState : MonoBehaviour
     void rerollBoard()
     {
         Debug.Log("Rerolled board");
+        currentStreak = 0;
+        currentStreakBonus = 1;
         gameObject.GetComponent<Timer>().AddTime(-20f);
         isRerolling = true;
         PowerUpsManager.Instance.YeetusDeletus(2);
@@ -182,7 +185,7 @@ public class BoardState : MonoBehaviour
             {
                 int multiplier = calculateMultiplier();
                 Debug.Log("Multiplier: "+multiplier);
-                currentStreak++;
+                increaseStreak();
                 //explode this color match
                 yield return new WaitForSeconds(.5f);
                 // explode all from this match
@@ -208,6 +211,12 @@ public class BoardState : MonoBehaviour
         {
             PhaseManager.Instance.PhaseChange(Phase.PreAction);
         }
+    }
+
+    public void increaseStreak()
+    {
+        currentStreak++;
+        currentStreakBonus = calculateBonusFromStreak();
     }
 
     public int calculateMultiplier()
@@ -311,8 +320,7 @@ public class BoardState : MonoBehaviour
         }
 
         gameObject.GetComponent<Timer>().AddTime(1f);
-        float bonusFromStreak = calculateBonusFromStreak();
-        currentScore += (int)Math.Floor(score*multiplier*bonusFromStreak);
+        currentScore += (int)Math.Floor(score*multiplier* currentStreakBonus);
     }
 
     public float calculateBonusFromStreak()
