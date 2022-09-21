@@ -7,7 +7,7 @@ public class PowerUpsSinglePool : MonoBehaviour
 {
     [SerializeField] GameObject Single;
 
-    int capacity = 20, max = 20;
+    int capacity = 20, max = 40;
     public static ObjectPool<GameObject> singlePool;
 
     private void OnEnable()

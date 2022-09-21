@@ -5,9 +5,11 @@ using TMPro;
 
 public class Timer : MonoBehaviour
 {
+    public static float timeCount = 0f;
+
     [SerializeField] TextMeshProUGUI timeDisplay;
 
-    float timeRemaining = 5f;
+    float timeRemaining = 40f;
     bool isTimeRunning = false, isPrepared = false;
 
     private void OnEnable()
@@ -45,6 +47,7 @@ public class Timer : MonoBehaviour
             if(timeRemaining > 1)
             {
                 timeRemaining -= Time.deltaTime;
+                timeCount += Time.deltaTime;
             }
             else
             {

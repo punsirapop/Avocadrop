@@ -12,7 +12,7 @@ public class ScoreUI : MonoBehaviour
     {
         var scores = scoreManager.GetHighScore().ToArray();
         Debug.Log(scores);
-        int length = (scores.Length < 10) ? scores.Length : 10;
+        int length = (scores.Length < 9) ? scores.Length : 9;
         for (int i = 0; i < length; i++)
         {
             var row = Instantiate(rowUI, transform).GetComponent<RowUI>();

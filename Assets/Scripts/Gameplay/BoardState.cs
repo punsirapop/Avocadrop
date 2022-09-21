@@ -127,8 +127,10 @@ public class BoardState : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!PhaseManager.Instance.isGameEnded && Time.fixedTime >= timeToGo && PhaseManager.Instance.phase == Phase.PlayerAction)
+        if (!PhaseManager.Instance.isGameEnded && Time.fixedTime >= timeToGo &&
+            PhaseManager.Instance.phase == Phase.PlayerAction)
         {
+            PhaseManager.Instance.PhaseChange(Phase.UpdateState);
             rerollBoard();
             resetRerollTimer();
         }

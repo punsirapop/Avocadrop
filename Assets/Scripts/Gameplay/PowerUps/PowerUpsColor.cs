@@ -6,7 +6,7 @@ using System.Linq;
 public class PowerUpsColor : MonoBehaviour
 {
     [SerializeField] List<Collider2D> myColliders = new List<Collider2D>();
-    [SerializeField] GameObject Single;
+    // [SerializeField] GameObject Single;
 
     Transform SingleCollection;
     ContactFilter2D filter = new ContactFilter2D();
@@ -46,6 +46,7 @@ public class PowerUpsColor : MonoBehaviour
 
         Avocado.colorText myColor = results.Find
             (x => (x.transform.position == transform.position)).GetComponent<Avocado>().colorEnum;
+
         foreach (Collider2D c in results)
         {
             if (c.GetComponent<Avocado>().colorEnum == myColor)
@@ -55,6 +56,8 @@ public class PowerUpsColor : MonoBehaviour
                 single.transform.position = c.transform.position;
             }
         }
+
+        Debug.Log("Color Found: " + deleteThese.Count + " / Single Created: " + SingleCollection.childCount);
     }
 
     public void Explode()

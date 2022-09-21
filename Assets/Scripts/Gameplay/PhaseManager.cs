@@ -40,9 +40,10 @@ public class PhaseManager : MonoBehaviour
 
     private void Update()
     {
-        if (isGameEnded)
+        if (isGameEnded && phase != Phase.GameEnd)
         {
             PhaseChange(Phase.GameEnd);
+            // isGameEnded = false;
         }
 
         currentPhaseDisplay.SetText("Current Phase: " + phase);
@@ -99,6 +100,10 @@ public class PhaseManager : MonoBehaviour
 
     public void PhaseChange(Phase newPhase)
     {
+        if (isGameEnded && phase != Phase.GameEnd)
+        {
+            newPhase = Phase.GameEnd;
+        }
         Debug.Log("=========== From Phase: "+ phase + " to Current Phase: " + newPhase + " ===========");
         phase = newPhase;
 
@@ -209,6 +214,7 @@ public class PhaseManager : MonoBehaviour
     private void HandleGameEnd()
     {
         Debug.Log("HANDLING THE END");
+        // Screenshot.Capture();
         PauseLid.SetActive(true);
         GameCanvas.SetActive(false);
         EndCanvas.SetActive(true);

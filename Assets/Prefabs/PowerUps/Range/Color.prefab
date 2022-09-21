@@ -74,4 +74,3 @@ MonoBehaviour:
   myColliders:
   - {fileID: -8367891228369720250}
   Single: {fileID: 5371993554881794582, guid: 834768d89cc662f43ba14a00926499e8, type: 3}
-  SingleCollection: {fileID: 0}

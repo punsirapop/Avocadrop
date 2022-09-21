@@ -12,12 +12,13 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     private void OnEnable()
     {
-        
+        PhaseManager.OnPhaseChanged += Reset;
     }
 
     private void OnDisable()
     {
         Range = null;
+        PhaseManager.OnPhaseChanged -= Reset;
     }
 
     public void Enter(Collider2D collision)
@@ -54,6 +55,14 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         if((Range.name == "Color" && grid.gameObject.layer != 8) || (Range != null && grid == null))
         {
             Range.SetActive(false);
+        }
+    }
+
+    private void Reset(Phase phase)
+    {
+        if (phase != Phase.PlayerAction)
+        {
+            transform.position = _position;
         }
     }
 
