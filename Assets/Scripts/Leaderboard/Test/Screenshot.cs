@@ -1,37 +1,78 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 using System.IO;
 using System;
 using UnityEngine.Rendering;
 using Unity.VisualScripting;
-using UnityEngine.UI;
 using System.Text.RegularExpressions;
 using UnityEditor;
 
+
 public class Screenshot : MonoBehaviour
 {
+    /*
+    [SerializeField] Image imgArea;
+
+    Texture2D img;
+
+    private void Awake()
+    {
+        img = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false);
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("TAKING A SHOT");
+            StartCoroutine(Capture());
+        }
+    }
+
+    private IEnumerator Capture()
+    {
+        yield return new WaitForEndOfFrame();
+
+        Rect region = new Rect(0, 0, Screen.width, Screen.height);
+
+        img.ReadPixels(region, 0, 0, false);
+        img.Apply();
+    }
+
+    private void ShowImg()
+    {
+        Sprite imgSprite = Sprite.Create(img, new Rect(0f, 0f, img.width, img.height), new Vector2(.5f, .5f), 100f);
+        imgArea.sprite = imgSprite;
+    }
+    */
+
+    /*
     [SerializeField] Camera cam;
     [SerializeField] Image Display;
 
     Texture2D shot;
 
-    public static Screenshot Instance;
-
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
+        PhaseManager.OnPhaseChanged += HandlePhaseChanged;
         cam = GetComponent<Camera>();
         shot = new Texture2D(cam.pixelWidth, cam.pixelHeight, TextureFormat.ARGB32, false);
     }
 
-    public static void Capture()
+    private void OnDisable()
     {
-        Instance.StartCoroutine(Instance.TakeShot());
+        PhaseManager.OnPhaseChanged -= HandlePhaseChanged;
+    }
+
+    private void HandlePhaseChanged(Phase phase)
+    {
+        if (phase == Phase.GameEnd)
+        {
+            StartCoroutine(TakeShot());
+        }
     }
 
     private IEnumerator TakeShot()
@@ -51,50 +92,79 @@ public class Screenshot : MonoBehaviour
             new Vector2(.5f, .5f), 100f);
         Display.sprite = photoSprite;
     }
+    */
 
-    /*
-    public static Screenshot Instance;
-
+    [SerializeField] Transform env;
     [SerializeField] Camera myCamera;
+    [SerializeField] Image toShow;
 
     bool takeShot = false;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        myCamera = gameObject.GetComponent<Camera>();
-        RenderPipelineManager.endFrameRendering += PleaseCaptureScreenshot;
+        // myCamera = gameObject.GetComponent<Camera>();
+        // RenderPipelineManager.endFrameRendering += PleaseCaptureScreenshot;
+        PhaseManager.OnPhaseChanged += HandlePhaseChanged;
     }
 
     private void OnDisable()
     {
-        RenderPipelineManager.endFrameRendering -= PleaseCaptureScreenshot;
+        // RenderPipelineManager.endFrameRendering -= PleaseCaptureScreenshot;
+        PhaseManager.OnPhaseChanged -= HandlePhaseChanged;
     }
 
-    private void PleaseCaptureScreenshot(ScriptableRenderContext src, Camera[] cam)
+    private void HandlePhaseChanged(Phase phase)
     {
-        if (takeShot)
+        if (phase == Phase.GameEnd)
         {
-            takeShot = false;
+            // takeShot = true;
+            StartCoroutine(PleaseCaptureScreenshot());
+        }
+    }
 
-            RenderTexture rt = new RenderTexture(Screen.height, Screen.height, 16);
+    private IEnumerator PleaseCaptureScreenshot()//ScriptableRenderContext src, Camera[] cam
+    {
+        yield return new WaitForEndOfFrame();
+        {
+            // takeShot = false;
+            int h = Screen.height, w = Screen.height;
+            Debug.Log(env.rotation.eulerAngles.z);
+            switch (env.rotation.eulerAngles.z)
+            {
+                case 0:
+                    w = Screen.height - 25;
+                    h = Screen.height;
+                    break;
+                case 90:
+                    w = Screen.height;
+                    h = Screen.height;
+                    break;
+                default:
+                    break;
+            }
+
+            RenderTexture rt = new RenderTexture(w, h, 16);
             myCamera.targetTexture = rt;
             RenderTexture.active = rt;
             myCamera.Render();
 
-            Texture2D screenshotTexture = new Texture2D(rt.height, rt.height, TextureFormat.ARGB32, false);
-            Rect rect = new Rect(0, 0, rt.height, rt.height);
+            Texture2D screenshotTexture = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
+            Rect rect = new Rect(0, 0, rt.width, rt.height);
             screenshotTexture.ReadPixels(rect, 0, 0);
             RenderTexture.active = null;
             screenshotTexture.Apply();
 
+            Sprite photoSprite = Sprite.Create(screenshotTexture,
+                new Rect(0f, 0f, screenshotTexture.width, screenshotTexture.height),
+                new Vector2(.5f, .5f), 100f);
+            toShow.sprite = photoSprite;
+
+            /*
             byte[] byteArray = screenshotTexture.EncodeToPNG();
             string path = Application.dataPath + Path.AltDirectorySeparatorChar
                 + "Saves" + Path.AltDirectorySeparatorChar + "pic.png";
             File.WriteAllBytes(path, byteArray);
+            */
         }
     }
 
@@ -102,12 +172,7 @@ public class Screenshot : MonoBehaviour
     {
         takeShot = true;
     }
-
-    public static void Capture()
-    {
-        Instance.PleaseCapture();
-    }
-    */
+    
 
     /*
     public static Screenshot Instance;

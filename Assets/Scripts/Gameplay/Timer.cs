@@ -7,9 +7,9 @@ public class Timer : MonoBehaviour
 {
     public static float timeCount = 0f;
 
-    [SerializeField] TextMeshProUGUI timeDisplay;
+    [SerializeField] TextMeshProUGUI timeDisplay, hiddenTimeDisplay;
 
-    float timeRemaining = 40f;
+    float timeRemaining = 5f;
     bool isTimeRunning = false, isPrepared = false;
 
     private void OnEnable()
@@ -45,6 +45,9 @@ public class Timer : MonoBehaviour
         float minute = Mathf.FloorToInt(timeRemaining / 60);
         float second = Mathf.FloorToInt(timeRemaining % 60);
         timeDisplay.text = string.Format("{0:00}:{1:00}", minute, second);
+        float hMinute = Mathf.FloorToInt(timeCount / 60);
+        float hSecond = Mathf.FloorToInt(timeCount % 60);
+        hiddenTimeDisplay.text = "Time: " + string.Format("{0:00}:{1:00}", hMinute, hSecond);
 
         if (isTimeRunning)
         {

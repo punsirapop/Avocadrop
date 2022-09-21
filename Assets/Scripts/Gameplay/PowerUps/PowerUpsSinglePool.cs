@@ -25,9 +25,10 @@ public class PowerUpsSinglePool : MonoBehaviour
                 s.gameObject.SetActive(false);
             },
             s => {
-                s.gameObject.SetActive(false);
+                Destroy(s.gameObject);
+                //s.gameObject.SetActive(false);
             },
-            false, capacity, max);
+            true, capacity, max);
         }
     }
 }

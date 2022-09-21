@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class SaveManager : ScoreManager
 {
-    [SerializeField] TextMeshProUGUI player;
+    [SerializeField] TMP_InputField player;
 
     public void CreateScore()
     {
-        if (player.text == null) player.text = "Empty";
+        if (player.textComponent.text == "") player.textComponent.text = "Empty";
 
-        string Name = player.text;
+        string Name = player.textComponent.text;
         float Score = BoardState.currentScore;
         float Time = Timer.timeCount;
 

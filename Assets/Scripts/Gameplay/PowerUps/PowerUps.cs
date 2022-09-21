@@ -52,7 +52,8 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     {
         Collider2D grid = Physics2D.OverlapCircle(transform.position, 0.1f,
             LayerMask.GetMask("Avocado") | LayerMask.GetMask("Grid"));
-        if((Range.name == "Color" && grid.gameObject.layer != 8) || (Range != null && grid == null))
+        if((Range.name == "Color" && (grid == null || grid.gameObject.layer != 8))
+            || (Range != null && grid == null))
         {
             Range.SetActive(false);
         }

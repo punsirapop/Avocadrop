@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using TMPro;
+using System.Threading;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -17,7 +18,9 @@ public class PhaseManager : MonoBehaviour
 
     [SerializeField] GameObject AvoCollection, PauseLid, GameCanvas, EndCanvas;
     [SerializeField] Transform Environment;
-    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay, scoreDisplay, streak,streakMultiplier;
+    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay,
+        patternFoundDisplay, scoreDisplay, hiddenScoreDisplay, endScoreDisplay, endTimeDisplay;
+
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
     int revealRequest = 0;
@@ -46,10 +49,11 @@ public class PhaseManager : MonoBehaviour
             // isGameEnded = false;
         }
 
-        currentPhaseDisplay.SetText("Current Phase: " + phase);
+        // currentPhaseDisplay.SetText("Current Phase: " + phase);
         // dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
         // patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
         scoreDisplay.SetText(BoardState.currentScore.ToString());
+        hiddenScoreDisplay.SetText("Score: " + BoardState.currentScore.ToString());
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -100,41 +104,44 @@ public class PhaseManager : MonoBehaviour
 
     public void PhaseChange(Phase newPhase)
     {
-        if (isGameEnded && phase != Phase.GameEnd)
+        if(phase != Phase.GameEnd)
         {
-            newPhase = Phase.GameEnd;
-        }
-        Debug.Log("=========== From Phase: "+ phase + " to Current Phase: " + newPhase + " ===========");
-        phase = newPhase;
+            if (isGameEnded && phase != Phase.GameEnd)
+            {
+                newPhase = Phase.GameEnd;
+            }
+            Debug.Log("=========== From Phase: " + phase + " to Current Phase: " + newPhase + " ===========");
+            phase = newPhase;
 
-        switch (phase)
-        {
-            case Phase.Preparation:
-                break;
-            case Phase.PlayerAction:
-                break;
-            case Phase.CheckExplode:
-                HandleCheckExplode();
-                break;
-            case Phase.Drop:
-                StartCoroutine(HandleDrop());
-                break;
-            case Phase.Spawn:
-                break;
-            case Phase.UpdateState:
-                StartCoroutine(HandleUpdateState());
-                break;
-            case Phase.GameEnd:
-                HandleGameEnd();
-                break;
-            case Phase.PreAction:
-                HandlePreAction();
-                break;
-            default:
-                break;
+            switch (phase)
+            {
+                case Phase.Preparation:
+                    break;
+                case Phase.PlayerAction:
+                    break;
+                case Phase.CheckExplode:
+                    HandleCheckExplode();
+                    break;
+                case Phase.Drop:
+                    StartCoroutine(HandleDrop());
+                    break;
+                case Phase.Spawn:
+                    break;
+                case Phase.UpdateState:
+                    StartCoroutine(HandleUpdateState());
+                    break;
+                case Phase.GameEnd:
+                    HandleGameEnd();
+                    break;
+                case Phase.PreAction:
+                    HandlePreAction();
+                    break;
+                default:
+                    break;
+            }
+
+            OnPhaseChanged?.Invoke(newPhase);
         }
-        
-        OnPhaseChanged?.Invoke(newPhase);
     }
 
     private void HandlePreAction()
@@ -214,7 +221,11 @@ public class PhaseManager : MonoBehaviour
     private void HandleGameEnd()
     {
         Debug.Log("HANDLING THE END");
-        // Screenshot.Capture();
+        Time.timeScale = 0f;
+        endScoreDisplay.SetText(BoardState.currentScore.ToString());
+        float hMinute = Mathf.FloorToInt(Timer.timeCount / 60);
+        float hSecond = Mathf.FloorToInt(Timer.timeCount % 60);
+        endTimeDisplay.text = string.Format("{0:00}:{1:00}", hMinute, hSecond);
         PauseLid.SetActive(true);
         GameCanvas.SetActive(false);
         EndCanvas.SetActive(true);

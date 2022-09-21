@@ -14,8 +14,6 @@ public class PowerUpsRange : MonoBehaviour
         List<Collider2D> result = new List<Collider2D>();
         List<Collider2D> results = new List<Collider2D>();
 
-
-
         foreach (Collider2D collider in myColliders)
         {
             Physics2D.OverlapCollider(collider, filter, result);
@@ -29,7 +27,7 @@ public class PowerUpsRange : MonoBehaviour
                 Debug.Log("points from powerup");
                 BoardState.currentScore += 10;
             }
-            c.SendMessage("DeleteMe");
+            c.SendMessage("DeleteMe", SendMessageOptions.DontRequireReceiver);
         }
         if (BoardState.isRerolling)
         {

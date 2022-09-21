@@ -23,7 +23,7 @@ public class PowerUpsColor : MonoBehaviour
     {
         foreach(Transform t in SingleCollection)
         {
-            PowerUpsSinglePool.singlePool.Release(t.gameObject);
+            if (t.gameObject.activeSelf) PowerUpsSinglePool.singlePool.Release(t.gameObject);
         }
     }
 
@@ -31,7 +31,7 @@ public class PowerUpsColor : MonoBehaviour
     {
         foreach (Transform t in SingleCollection)
         {
-            PowerUpsSinglePool.singlePool.Release(t.gameObject);
+            if(t.gameObject.activeSelf) PowerUpsSinglePool.singlePool.Release(t.gameObject);
         }
 
         results.Clear();

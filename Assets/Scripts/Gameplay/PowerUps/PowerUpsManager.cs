@@ -11,6 +11,7 @@ public class PowerUpsManager : MonoBehaviour
     [SerializeField] List<Transform> PUSpaces;
     [SerializeField] GameObject PUPrefab;
     [SerializeField] List<GameObject> PURanges;
+    [SerializeField] List<Sprite> PUSprites;
 
     Dictionary<Transform, GameObject> PUList = new Dictionary<Transform, GameObject>();
     private void Start()
@@ -38,6 +39,7 @@ public class PowerUpsManager : MonoBehaviour
             {
                 pair.Value.SetActive(true);
                 // pair.Value.transform.position = pair.Key.position;
+                pair.Value.GetComponent<SpriteRenderer>().sprite = PUSprites[index];
                 pair.Value.SendMessage("SetRange", PURanges[index]);
                 break;
             }
