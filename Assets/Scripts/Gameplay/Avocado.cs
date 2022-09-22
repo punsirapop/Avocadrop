@@ -20,13 +20,14 @@ public class Avocado : MonoBehaviour
         { colorText.green, colorText.red, colorText.yellow , colorText.blue };
 
     public Color color;
-    public bool pleaseDrop = false, isPartOfMatch;
+    public bool pleaseDrop = false, isPartOfMatch, aboutToExplode = false;
+
     public colorText colorEnum;
     public int isLock = 0;
 
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] GameObject lockSprite, permLockSprite;
-    [SerializeField] Gradient gradient;
+    [SerializeField]Gradient gradient;
 
     float duration = 1.0f;
     float t = 0f;
@@ -34,6 +35,7 @@ public class Avocado : MonoBehaviour
 
     private void OnEnable()
     {
+        
         if (BoardState.rainbowLeftToDrop > 0)
         {
             colorEnum = colorText.rainbow;
@@ -134,7 +136,6 @@ public class Avocado : MonoBehaviour
         }
     }
     */
-    
 
     public void lockMe()
     {
