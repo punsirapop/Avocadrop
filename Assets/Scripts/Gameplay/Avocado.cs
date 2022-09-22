@@ -9,7 +9,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     public bool pleaseDrop = false, isPartOfMatch, aboutToExplode = false;
 
     public colorText colorEnum;
-    int isLock = 0;
+    public int isLock = 0;
 
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] GameObject lockSprite, permLockSprite;
