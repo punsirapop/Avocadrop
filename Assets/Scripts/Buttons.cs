@@ -11,7 +11,7 @@ public class Buttons : MonoBehaviour
     0 - main
     1 - game
     2 - score
-    3 - exit
+    3 -  exit
     */
 
     [SerializeField] GameObject ConfirmationBox;
