@@ -16,9 +16,9 @@ public class PhaseManager : MonoBehaviour
     public bool isGameEnded = false;
     public bool isPaused = false;
 
-    [SerializeField] GameObject AvoCollection, PauseLid, Guage, BackPause, GameCanvas, EndCanvas;
+    [SerializeField] GameObject AvoCollection, PauseLid, GameCanvas, EndCanvas;
     [SerializeField] Transform Environment;
-    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, revealedPortionDisplay,
+    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay,
         patternFoundDisplay, scoreDisplay, hiddenScoreDisplay, endScoreDisplay, endTimeDisplay;
 
 
@@ -52,8 +52,6 @@ public class PhaseManager : MonoBehaviour
         // currentPhaseDisplay.SetText("Current Phase: " + phase);
         // dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
         // patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
-        revealedPortionDisplay.SetText(MazeSpawner.Instance.revealedSoFar + "/"
-            + MazeSpawner.Instance.mazeCount + "\n" + MazeSpawner.Instance.revealedPortion + "/" + revealRequest);
         scoreDisplay.SetText(BoardState.currentScore.ToString());
         hiddenScoreDisplay.SetText("Score: " + BoardState.currentScore.ToString());
 
@@ -148,9 +146,7 @@ public class PhaseManager : MonoBehaviour
 
     private void HandlePreAction()
     {
-        int i = UnityEngine.Random.Range(3, 6);
-        MazeSpawner.Instance.Reveal(revealRequest * i);
-        revealRequest = 0;
+        MazeSpawner.Instance.Reveal((revealRequest * 3) - MazeSpawner.Instance.revealedSoFar);
         PhaseChange(Phase.PlayerAction);
     }
 
@@ -217,7 +213,6 @@ public class PhaseManager : MonoBehaviour
     private IEnumerator HandleUpdateState()
     {
         PauseLid.SetActive(false);
-        Guage.SetActive(true);
         yield return new WaitUntil(() => doneDropCount == SpawnManager.Instance.capacity);
         BoardState.Instance.updateState();
         PhaseChange(Phase.CheckExplode);
@@ -231,7 +226,6 @@ public class PhaseManager : MonoBehaviour
         float hSecond = Mathf.FloorToInt(Timer.timeCount % 60);
         endTimeDisplay.text = string.Format("{0:00}:{1:00}", hMinute, hSecond);
         PauseLid.SetActive(true);
-        Guage.SetActive(false);
         GameCanvas.SetActive(false);
         EndCanvas.SetActive(true);
     }
@@ -251,8 +245,6 @@ public class PhaseManager : MonoBehaviour
     {
         isPaused = !isPaused;
         PauseLid.SetActive(isPaused);
-        BackPause.SetActive(isPaused);
-        Guage.SetActive(!isPaused);
     }
 
     /*
