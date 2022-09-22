@@ -29,10 +29,12 @@ public class PowerUpsRange : MonoBehaviour
             }
             c.SendMessage("DeleteMe", SendMessageOptions.DontRequireReceiver);
         }
+        /*
         if (BoardState.isRerolling)
         {
             BoardState.isRerolling = false;
         }
+        */
         PhaseManager.Instance.PhaseChange(Phase.Drop);
         gameObject.SetActive(false);
     }

@@ -210,12 +210,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 570532584}
-  m_RootOrder: 7
+  m_Father: {fileID: 485466271}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 166.5, y: 582}
+  m_AnchoredPosition: {x: -1577.5, y: -208}
   m_SizeDelta: {x: 360, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6351662
@@ -7511,6 +7511,7 @@ RectTransform:
   - {fileID: 963370089}
   - {fileID: 1895464251}
   - {fileID: 39904962}
+  - {fileID: 6351661}
   m_Father: {fileID: 1993611880}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8963,7 +8964,6 @@ RectTransform:
   - {fileID: 803331934}
   - {fileID: 318333254}
   - {fileID: 197608417}
-  - {fileID: 6351661}
   m_Father: {fileID: 1993611880}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -15083,6 +15083,7 @@ MonoBehaviour:
   BoxHolder: {fileID: 1172651015}
   revealedSoFar: 0
   revealedPortion: 0
+  mazeCount: 0
 --- !u!1001 &921000417
 PrefabInstance:
   m_ObjectHideFlags: 0

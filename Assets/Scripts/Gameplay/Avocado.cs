@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Avocado : MonoBehaviour
+public class Avocado : MonoBehaviour, IPointerClickHandler
 {
     public enum colorText
     {
@@ -22,12 +22,12 @@ public class Avocado : MonoBehaviour
     public Color color;
     public bool pleaseDrop = false, isPartOfMatch;
     public colorText colorEnum;
+    public int isLock = 0;
 
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] GameObject lockSprite, permLockSprite;
     [SerializeField] Gradient gradient;
 
-    int isLock = 0;
     float duration = 1.0f;
     float t = 0f;
     bool gradientIncreasing = true;
@@ -105,7 +105,7 @@ public class Avocado : MonoBehaviour
 
     }
 
-    /*
+    
     public void OnPointerClick(PointerEventData eventData)
     {
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
@@ -121,6 +121,7 @@ public class Avocado : MonoBehaviour
                 case 0:
                     break;
                 case 1:
+                    PhaseManager.Instance.lockedAvo++;
                     lockSprite.SetActive(true);
                     break;
                 case 2:
@@ -132,7 +133,7 @@ public class Avocado : MonoBehaviour
             //checkObstacleNearMe();
         }
     }
-    */
+    
 
     public void lockMe()
     {
@@ -146,6 +147,7 @@ public class Avocado : MonoBehaviour
             case 0:
                 break;
             case 1:
+                PhaseManager.Instance.lockedAvo++;
                 lockSprite.SetActive(true);
                 break;
             case 2:
@@ -193,8 +195,16 @@ public class Avocado : MonoBehaviour
                 SpawnManager.Instance.SendMessage("Despawn", gameObject);
                 break;
             case 1:
-                isLock = 0;
-                lockSprite.SetActive(false);
+                if (!BoardState.isRerolling)
+                {
+                    isLock = 0;
+                    PhaseManager.Instance.lockedAvo--;
+                    lockSprite.SetActive(false);
+                }
+                else
+                {
+                    SpawnManager.Instance.SendMessage("Despawn", gameObject);
+                }
                 break;
             default:
                 break;

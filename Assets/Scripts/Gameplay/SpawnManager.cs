@@ -39,6 +39,11 @@ public class SpawnManager : MonoBehaviour
             avo => {
                 avo.gameObject.SetActive(true);
                 avo.transform.parent = AvoCollection;
+                avo.GetComponent<Avocado>().isLock = 0;
+                foreach(Transform t in avo.transform)
+                {
+                    t.gameObject.SetActive(false);
+                }
             },
             avo => {
                 avo.gameObject.SetActive(false);
