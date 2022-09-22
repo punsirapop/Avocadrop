@@ -13,14 +13,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] GameObject Avocado;
 
     ObjectPool<GameObject> pool;
-
-    public int capacity = 40, max = 80;
-
-    /*
-        { global::Avocado.colorText.cyan, global::Avocado.colorText.green,
-        global::Avocado.colorText.blue, global::Avocado.colorText.yellow };
-    */
-
+    public int capacity = 20, max = 80;
     int msgReceivedCount;
     bool isReady = false, msgSent = false;
     List<Vector3> possibleSpaces = new List<Vector3>();
