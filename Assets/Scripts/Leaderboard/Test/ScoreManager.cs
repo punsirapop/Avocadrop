@@ -60,7 +60,8 @@ public class ScoreManager : MonoBehaviour
     {
         path = Application.dataPath + Path.AltDirectorySeparatorChar
             + "Saves"+ Path.AltDirectorySeparatorChar + "SaveData.json";
-        persistentPath = Application.persistentDataPath + Path.AltDirectorySeparatorChar + "SaveData.json";
+        persistentPath = Application.persistentDataPath + Path.AltDirectorySeparatorChar
+            + "Saves" + Path.AltDirectorySeparatorChar + "SaveData.json";
         Debug.Log("Save path: " + path);
     }
 

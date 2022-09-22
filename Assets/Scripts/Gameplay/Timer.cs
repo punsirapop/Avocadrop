@@ -9,7 +9,7 @@ public class Timer : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI timeDisplay, hiddenTimeDisplay;
 
-    float timeRemaining = 5f;
+    float timeRemaining = 10f;
     bool isTimeRunning = false, isPrepared = false;
 
     private void OnEnable()

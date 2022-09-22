@@ -99,6 +99,8 @@ public class Screenshot : MonoBehaviour
     [SerializeField] Image toShow;
 
     bool takeShot = false;
+    string path, persistentPath;
+    Texture2D screenshotTexture;
 
     private void Awake()
     {
@@ -129,14 +131,14 @@ public class Screenshot : MonoBehaviour
             // takeShot = false;
             int h = Screen.height, w = Screen.height;
             Debug.Log(env.rotation.eulerAngles.z);
-            switch (env.rotation.eulerAngles.z)
+            switch (env.rotation.eulerAngles.z % 180)
             {
                 case 0:
                     w = Screen.height - 25;
                     h = Screen.height;
                     break;
                 case 90:
-                    w = Screen.height;
+                    w = Screen.height + 500;
                     h = Screen.height;
                     break;
                 default:
@@ -148,7 +150,7 @@ public class Screenshot : MonoBehaviour
             RenderTexture.active = rt;
             myCamera.Render();
 
-            Texture2D screenshotTexture = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
+            screenshotTexture = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
             Rect rect = new Rect(0, 0, rt.width, rt.height);
             screenshotTexture.ReadPixels(rect, 0, 0);
             RenderTexture.active = null;
@@ -158,21 +160,24 @@ public class Screenshot : MonoBehaviour
                 new Rect(0f, 0f, screenshotTexture.width, screenshotTexture.height),
                 new Vector2(.5f, .5f), 100f);
             toShow.sprite = photoSprite;
-
-            /*
-            byte[] byteArray = screenshotTexture.EncodeToPNG();
-            string path = Application.dataPath + Path.AltDirectorySeparatorChar
-                + "Saves" + Path.AltDirectorySeparatorChar + "pic.png";
-            File.WriteAllBytes(path, byteArray);
-            */
         }
     }
 
-    private void PleaseCapture()
+    public void SaveImage()
     {
-        takeShot = true;
+        byte[] byteArray = screenshotTexture.EncodeToPNG();
+        SetPath();
+        File.WriteAllBytes(path, byteArray);
     }
-    
+
+    private void SetPath()
+    {
+        path = Application.dataPath + Path.AltDirectorySeparatorChar
+            + "Saves" + Path.AltDirectorySeparatorChar + DateTime.Now.ToString("dd-M-yyyy_HH-mm-ss") + ".png";
+        persistentPath = Application.persistentDataPath + Path.AltDirectorySeparatorChar
+            + "Saves" + Path.AltDirectorySeparatorChar + DateTime.Now.ToString("dd-M-yyyy_HH-mm-ss") + ".png";
+        Debug.Log("Save path: " + path);
+    }
 
     /*
     public static Screenshot Instance;

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+using System;
 
 public class SaveManager : ScoreManager
 {
@@ -10,9 +12,7 @@ public class SaveManager : ScoreManager
 
     public void CreateScore()
     {
-        if (player.textComponent.text == "") player.textComponent.text = "Empty";
-
-        string Name = player.textComponent.text;
+        string Name = (String.IsNullOrWhiteSpace(player.text)) ? "Empty" : player.text;
         float Score = BoardState.currentScore;
         float Time = Timer.timeCount;
 
