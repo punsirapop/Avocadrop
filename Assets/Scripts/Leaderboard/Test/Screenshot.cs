@@ -130,18 +130,18 @@ public class Screenshot : MonoBehaviour
         {
             // takeShot = false;
 
-            int a = (env.rotation.eulerAngles.z % 180 == 0) ? Screen.height - 25 : Screen.height;
+            // int a = (env.rotation.eulerAngles.z % 180 == 0) ? Screen.height - 25 : Screen.height;
 
-            RenderTexture rt = new RenderTexture(a, Screen.height, 16);
+            RenderTexture rt = new RenderTexture(Screen.height, Screen.height, 16);
             myCamera.targetTexture = rt;
             RenderTexture.active = rt;
             myCamera.Render();
 
-            int b = (env.rotation.eulerAngles.z % 180 == 0) ? rt.height : rt.height - 25;
-            int c = (env.rotation.eulerAngles.z % 180 == 0) ? 0 : 10;
+            // int b = (env.rotation.eulerAngles.z % 180 == 0) ? rt.height : rt.height - 25;
+            // int c = (env.rotation.eulerAngles.z % 180 == 0) ? 0 : 10;
 
-            screenshotTexture = new Texture2D(rt.width, b, TextureFormat.ARGB32, false);
-            Rect rect = new Rect(0, c, rt.width, rt.height);
+            screenshotTexture = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
+            Rect rect = new Rect(0, 0, rt.width, rt.height);
             screenshotTexture.ReadPixels(rect, 0, 0);
             RenderTexture.active = null;
             screenshotTexture.Apply();
