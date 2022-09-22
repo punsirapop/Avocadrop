@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Avocado : MonoBehaviour, IPointerClickHandler
+public class Avocado : MonoBehaviour
 {
     public enum colorText
     {
@@ -105,7 +105,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
 
     }
 
-    
+    /*
     public void OnPointerClick(PointerEventData eventData)
     {
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
@@ -133,6 +133,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             //checkObstacleNearMe();
         }
     }
+    */
     
 
     public void lockMe()
