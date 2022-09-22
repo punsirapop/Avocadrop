@@ -54,8 +54,8 @@ public class PhaseManager : MonoBehaviour
         // currentPhaseDisplay.SetText("Current Phase: " + phase);
         // dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
         // patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
-        revealedPortionDisplay.SetText(MazeSpawner.Instance.revealedSoFar + "/"
-            + MazeSpawner.Instance.mazeCount + "\n" + MazeSpawner.Instance.revealedPortion + "/" + revealRequest);
+        // revealedPortionDisplay.SetText(MazeSpawner.Instance.revealedSoFar + "/"
+        //     + MazeSpawner.Instance.mazeCount + "\n" + MazeSpawner.Instance.revealedPortion + "/" + revealRequest);
         scoreDisplay.SetText(BoardState.currentScore.ToString());
         hiddenScoreDisplay.SetText("Score: " + BoardState.currentScore.ToString());
 
