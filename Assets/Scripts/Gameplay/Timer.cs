@@ -9,11 +9,12 @@ public class Timer : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI timeDisplay, hiddenTimeDisplay;
 
-    float timeRemaining = 10f;
+    float timeRemaining = 120f;
     bool isTimeRunning = false, isPrepared = false;
 
     private void OnEnable()
     {
+        timeCount = 0f;
         PhaseManager.OnPhaseChanged += HandlePhaseChanged;
     }
     private void OnDisable()

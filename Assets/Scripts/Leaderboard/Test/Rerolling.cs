@@ -4,12 +4,22 @@ using UnityEngine;
 
 public class Rerolling : MonoBehaviour
 {
-    private void Update()
+    private void OnEnable()
     {
-        if (BoardState.isRerolling)
+        PhaseManager.OnPhaseChanged += HandlePhaseChanged;
+    }
+
+    private void OnDisable()
+    {
+        PhaseManager.OnPhaseChanged += HandlePhaseChanged;
+    }
+
+    private void HandlePhaseChanged(Phase phase)
+    {
+        if (phase == Phase.PlayerAction)
         {
-            gameObject.SetActive(true);
+            Debug.Log("REROLL TEXT OFF");
+            gameObject.SetActive(false);
         }
-        
     }
 }

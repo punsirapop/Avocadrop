@@ -523,7 +523,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 450, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &770252983
 MonoBehaviour:
@@ -680,7 +680,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 965, y: 100}
+  m_CellSize: {x: 1280, y: 100}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 1
@@ -696,7 +696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f817ae5fdcc76458650ff138ef81fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rowUI: {fileID: -5263450454035223262, guid: af9933ea4f367d146ab437210608b2c9, type: 3}
+  rowUI: {fileID: 1791785372851622752, guid: af9933ea4f367d146ab437210608b2c9, type: 3}
   scoreManager: {fileID: 42784619}
 --- !u!1 &1150439777
 GameObject:
@@ -735,8 +735,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 481.64072, y: 0}
-  m_SizeDelta: {x: 963.2815, y: 0}
+  m_AnchoredPosition: {x: 639.23456, y: 0}
+  m_SizeDelta: {x: 1278.4692, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1150439779
 MonoBehaviour:

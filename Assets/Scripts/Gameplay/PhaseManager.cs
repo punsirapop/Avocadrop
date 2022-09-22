@@ -146,7 +146,7 @@ public class PhaseManager : MonoBehaviour
 
     private void HandlePreAction()
     {
-        MazeSpawner.Instance.Reveal(revealRequest-MazeSpawner.Instance.revealedSoFar);
+        MazeSpawner.Instance.Reveal((revealRequest * 5) - MazeSpawner.Instance.revealedSoFar);
         PhaseChange(Phase.PlayerAction);
     }
 
@@ -221,7 +221,6 @@ public class PhaseManager : MonoBehaviour
     private void HandleGameEnd()
     {
         Debug.Log("HANDLING THE END");
-        Time.timeScale = 0f;
         endScoreDisplay.SetText(BoardState.currentScore.ToString());
         float hMinute = Mathf.FloorToInt(Timer.timeCount / 60);
         float hSecond = Mathf.FloorToInt(Timer.timeCount % 60);

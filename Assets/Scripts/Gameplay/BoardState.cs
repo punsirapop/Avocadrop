@@ -5,7 +5,7 @@ using System;
 
 public class BoardState : MonoBehaviour
 {
-    [SerializeField] GameObject AvoCollection, MultiplierCollection, multiplier;
+    [SerializeField] GameObject AvoCollection, MultiplierCollection, multiplier, HRerolling;
 
     public static BoardState Instance;
     public bool fallingDone;
@@ -37,10 +37,8 @@ public class BoardState : MonoBehaviour
     public static int currentStreak = 0;
     public static float currentStreakBonus = 1;
 
-
-
     public static float timeToGo;
-    float rerollInterval = 10f;
+    float rerollInterval = 20f;
 
     public enum matchPattern
     {
@@ -132,7 +130,9 @@ public class BoardState : MonoBehaviour
         if (!PhaseManager.Instance.isGameEnded && Time.fixedTime >= timeToGo &&
             PhaseManager.Instance.phase == Phase.PlayerAction)
         {
-            PhaseManager.Instance.PhaseChange(Phase.UpdateState);
+            // PhaseManager.Instance.PhaseChange(Phase.UpdateState);
+            Debug.Log("REROLL TEXT ON");
+            HRerolling.SetActive(true);
             rerollBoard();
             resetRerollTimer();
         }

@@ -129,29 +129,19 @@ public class Screenshot : MonoBehaviour
         yield return new WaitForEndOfFrame();
         {
             // takeShot = false;
-            int h = Screen.height, w = Screen.height;
-            Debug.Log(env.rotation.eulerAngles.z);
-            switch (env.rotation.eulerAngles.z % 180)
-            {
-                case 0:
-                    w = Screen.height - 25;
-                    h = Screen.height;
-                    break;
-                case 90:
-                    w = Screen.height + 500;
-                    h = Screen.height;
-                    break;
-                default:
-                    break;
-            }
 
-            RenderTexture rt = new RenderTexture(w, h, 16);
+            int a = (env.rotation.eulerAngles.z % 180 == 0) ? Screen.height - 25 : Screen.height;
+
+            RenderTexture rt = new RenderTexture(a, Screen.height, 16);
             myCamera.targetTexture = rt;
             RenderTexture.active = rt;
             myCamera.Render();
 
-            screenshotTexture = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
-            Rect rect = new Rect(0, 0, rt.width, rt.height);
+            int b = (env.rotation.eulerAngles.z % 180 == 0) ? rt.height : rt.height - 25;
+            int c = (env.rotation.eulerAngles.z % 180 == 0) ? 0 : 10;
+
+            screenshotTexture = new Texture2D(rt.width, b, TextureFormat.ARGB32, false);
+            Rect rect = new Rect(0, c, rt.width, rt.height);
             screenshotTexture.ReadPixels(rect, 0, 0);
             RenderTexture.active = null;
             screenshotTexture.Apply();
@@ -173,9 +163,24 @@ public class Screenshot : MonoBehaviour
     private void SetPath()
     {
         path = Application.dataPath + Path.AltDirectorySeparatorChar
-            + "Saves" + Path.AltDirectorySeparatorChar + DateTime.Now.ToString("dd-M-yyyy_HH-mm-ss") + ".png";
+            + "Saves" + Path.AltDirectorySeparatorChar;
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        path += DateTime.Now.ToString("dd-M-yyyy_HH-mm-ss") + ".png";
+        /*
         persistentPath = Application.persistentDataPath + Path.AltDirectorySeparatorChar
-            + "Saves" + Path.AltDirectorySeparatorChar + DateTime.Now.ToString("dd-M-yyyy_HH-mm-ss") + ".png";
+            + "Saves" + Path.AltDirectorySeparatorChar + "SaveData.json";
+        
+        persistentPath = Application.persistentDataPath + Path.AltDirectorySeparatorChar
+            + "Saves" + Path.AltDirectorySeparatorChar;
+        if (!Directory.Exists(persistentPath))
+        {
+            Directory.CreateDirectory(persistentPath);
+        }
+        persistentPath += DateTime.Now.ToString("dd-M-yyyy_HH-mm-ss") + ".png";
+        */
         Debug.Log("Save path: " + path);
     }
 
