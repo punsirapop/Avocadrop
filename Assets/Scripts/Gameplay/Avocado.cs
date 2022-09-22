@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Avocado : MonoBehaviour, IPointerClickHandler
+public class Avocado : MonoBehaviour
 {
     public Color color;
     public bool pleaseDrop = false, isPartOfMatch;
@@ -12,9 +12,6 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     Transform pointCollection;
     public colorText colorEnum;
     int isLock = 0;
-
-    float timeToGo;
-    float rainbowColorSwitchInterval = 0.1f;
 
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] GameObject lockSprite, permLockSprite;
@@ -60,6 +57,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     private colorText randomColor()
     {
         List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow, colorText.blue, colorText.magenta, colorText.cyan };
+        //List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow,};
+
         int index = Random.Range(0, colorList.Count);
         //Debug.Log(colorList[index]);
         return colorList[index];
@@ -105,10 +104,11 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         */
         //fallingPoint.transform.position = transform.position;
 
-        timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
+        //timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
 
     }
 
+    /*
     public void OnPointerClick(PointerEventData eventData)
     {
         if (PhaseManager.Instance.phase == Phase.PlayerAction)
@@ -133,6 +133,28 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             }
             // DeleteMe();
             //checkObstacleNearMe();
+        }
+    }
+    */
+
+    public void lockMe()
+    {
+        isLock = (isLock + 1) % 3;
+
+        lockSprite.SetActive(false);
+        permLockSprite.SetActive(false);
+        gameObject.layer = 8;
+        switch (isLock)
+        {
+            case 0:
+                break;
+            case 1:
+                lockSprite.SetActive(true);
+                break;
+            case 2:
+                permLockSprite.SetActive(true);
+                gameObject.layer = 9;
+                break;
         }
     }
 
@@ -160,10 +182,10 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             }
 
             if (hits.Length == 1 && hits[0].collider.gameObject.layer == 9)
-                {
-                    Debug.Log("hit obstacle!!!!!!!!!!!!!!!!!!");
-                }
-    }
+            {
+                Debug.Log("hit obstacle!!!!!!!!!!!!!!!!!!");
+            }
+        }
     }
 
     public void DeleteMe()
@@ -191,11 +213,7 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
         }
         if (colorEnum.Equals(colorText.rainbow))
         {
-            //if (Time.fixedTime >= timeToGo)
-            //{
-            //    applyColor(randomColor());
-            //    timeToGo = Time.fixedTime + rainbowColorSwitchInterval;
-            //}
+            
             if (gradientIncreasing)
             {
                 t += Time.deltaTime / duration;
@@ -252,8 +270,8 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
     public void Drop()
     {
         // Debug.Log("Dropping...");
-        // int layermask = ~(LayerMask.GetMask("Avocado")) & ~(LayerMask.GetMask("Grid"));
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, .65f);
+        int layerMask = ~(LayerMask.GetMask("Default")) & ~(LayerMask.GetMask("Multiplier"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, .65f, layerMask);
 
         if (hits.Length == 1 && hits[0].collider.gameObject.layer == 7 && isLock < 1)
         {
@@ -267,7 +285,6 @@ public class Avocado : MonoBehaviour, IPointerClickHandler
             // Debug.Log("Sent msg from " + transform.position);
             PhaseManager.Instance.isDropping = false;
             pleaseDrop = false;
-            Debug.Log("Done dropping");
             PhaseManager.Instance.doneDropCount++;
         }
     }

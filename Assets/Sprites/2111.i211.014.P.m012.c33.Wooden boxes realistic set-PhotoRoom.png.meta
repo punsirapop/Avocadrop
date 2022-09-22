@@ -1,0 +1,442 @@
+fileFormatVersion: 2
+guid: e52ff7c33707c0a428fb1aad2a705826
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 428
+        width: 416
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7641136190f536b459cd17f00e93a6af
+      internalID: 654785395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 335
+        width: 416
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7889b4ba8d33ee84f9c3ddfd37cc6bce
+      internalID: 735274539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_2
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 17
+        width: 416
+        height: 225
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b13c942600f555488843d438a31da3a
+      internalID: 761681999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_3
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 428
+        width: 416
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f00e2759176dab849bb991048662006c
+      internalID: 866622079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_4
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 428
+        width: 416
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc1c1531a661ece4e9ee7d85c9647f8a
+      internalID: -97884807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_5
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 242
+        width: 416
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ea82dd0b3ce2da4fa7be02142b13d77
+      internalID: 1462748792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_6
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 241
+        width: 416
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3eccf14a40468754fbe883e1d2fcfa46
+      internalID: -51830763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_7
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 17
+        width: 416
+        height: 225
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c99b0603a14af14a918821a6ae75f51
+      internalID: -1623015406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_8
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 17
+        width: 416
+        height: 225
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e2cb5243403d56449c66aad720b36d2
+      internalID: -1386113221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_9
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 242
+        width: 416
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1831fb0975c8dca458fdf9b19369a741
+      internalID: 930867858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_10
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 335
+        width: 416
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 359607206424b8f4a96efdf793296f89
+      internalID: -402925502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_11
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 335
+        width: 416
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e24e7afbbd2647f4196117c1133bf731
+      internalID: -971253527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_12
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 345
+        width: 988
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 473da29a24d082348a77b3dbf4e7dcde
+      internalID: 1870003265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_13
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 232
+        width: 986
+        height: 205
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46edc18164cdf2c4390a2398edf7b49b
+      internalID: 1503725883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_8: -1623015406
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_9: 930867858
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_4: 866622079
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_7: -51830763
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_11: -971253527
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_1: 735274539
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_10: -402925502
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_5: -97884807
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_12: 1870003265
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_2: 761681999
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_13: -965082646
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_3: -1104139592
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_0: 654785395
+      2111.i211.014.P.m012.c33.Wooden boxes realistic set-PhotoRoom_6: 1462748792
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

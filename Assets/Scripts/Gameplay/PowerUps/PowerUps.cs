@@ -7,23 +7,70 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 {
     public GameObject Range;
 
-    Collider2D grid;
     Vector3 _position, cursorPos;
     bool isSelected;
 
     private void OnEnable()
     {
-        
+        PhaseManager.OnPhaseChanged += Reset;
     }
 
     private void OnDisable()
     {
         Range = null;
+        PhaseManager.OnPhaseChanged -= Reset;
     }
 
+    public void Enter(Collider2D collision)
+    {
+        if(Range != null && isSelected)
+        {
+            bool passed = false;
+            if (Range.name == "Color")
+            {
+                passed = (collision.gameObject.layer == 8);
+            }
+            else
+            {
+                passed = (collision.gameObject.layer == 7);
+            }
+
+            if (passed)
+            {
+                Range.SetActive(true);
+                Range.transform.position = collision.transform.position;
+                Range.SendMessage("ChangePos", SendMessageOptions.DontRequireReceiver);
+            }
+            else
+            {
+                // Range.SetActive(false);
+            }
+        }
+    }
+
+    public void Exit(Collider2D collision)
+    {
+        Collider2D grid = Physics2D.OverlapCircle(transform.position, 0.1f,
+            LayerMask.GetMask("Avocado") | LayerMask.GetMask("Grid"));
+        if((Range.name == "Color" && (grid == null || grid.gameObject.layer != 8))
+            || (Range != null && grid == null))
+        {
+            Range.SetActive(false);
+        }
+    }
+
+    private void Reset(Phase phase)
+    {
+        if (phase != Phase.PlayerAction)
+        {
+            transform.position = _position;
+        }
+    }
+
+    /*
     private void Update()
     {
-        if(Range.name == "Whole")
+        if(Range.name == "Color")
         {
             grid = Physics2D.OverlapCircle(transform.position, 0.1f, LayerMask.GetMask("Avocado"));
         }
@@ -45,36 +92,45 @@ public class PowerUps : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
                 Range.SetActive(false);
             }
         }
-       
     }
+    */
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        isSelected = true;
+        if (!PhaseManager.Instance.isPaused) isSelected = true;
         // Range.SetActive(isSelected);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        isSelected = false;
+        if (!PhaseManager.Instance.isPaused)
+        {
+            isSelected = false;
+            if (PhaseManager.Instance.phase != Phase.PlayerAction)
+            {
+                transform.position = _position;
+                Range.SetActive(false);
+                return;
+            }
 
-        if (Range.activeSelf)
-        {
-            // PowerUpsManager.Instance.usePowerUp(gameObject);
-            Range.SendMessage("Explode");
-            transform.position = _position;
-            gameObject.SetActive(false);
+            if (Range.activeSelf)
+            {
+                // PowerUpsManager.Instance.usePowerUp(gameObject);
+                Range.SendMessage("Explode");
+                transform.position = _position;
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                transform.position = _position;
+            }
+            // Range.SetActive(isSelected);
         }
-        else
-        {
-            transform.position = _position;
-        }
-        // Range.SetActive(isSelected);
     }
 
     public void OnPointerMove(PointerEventData eventData)
     {
-        if (PhaseManager.Instance.phase == Phase.PlayerAction && isSelected)
+        if (PhaseManager.Instance.phase == Phase.PlayerAction && isSelected && !PhaseManager.Instance.isPaused)
         {
             cursorPos = Camera.main.ScreenToWorldPoint(eventData.position);
             transform.position = new Vector2(cursorPos.x, cursorPos.y);

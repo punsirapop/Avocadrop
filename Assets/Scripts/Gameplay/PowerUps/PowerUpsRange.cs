@@ -7,6 +7,8 @@ public class PowerUpsRange : MonoBehaviour
     [SerializeField] List<Collider2D> myColliders = new List<Collider2D>();
     public void Explode()
     {
+        BoardState.Instance.resetRerollTimer();
+        Debug.Log("Time to reroll reset");
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(LayerMask.GetMask("Avocado"));
         List<Collider2D> result = new List<Collider2D>();
@@ -20,9 +22,17 @@ public class PowerUpsRange : MonoBehaviour
 
         foreach(Collider2D c in results)
         {
-            c.SendMessage("DeleteMe");
+            if (!BoardState.isRerolling)
+            {
+                Debug.Log("points from powerup");
+                BoardState.currentScore += 10;
+            }
+            c.SendMessage("DeleteMe", SendMessageOptions.DontRequireReceiver);
         }
-
+        if (BoardState.isRerolling)
+        {
+            BoardState.isRerolling = false;
+        }
         PhaseManager.Instance.PhaseChange(Phase.Drop);
         gameObject.SetActive(false);
     }

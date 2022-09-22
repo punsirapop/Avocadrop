@@ -2,21 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class Buttons : MonoBehaviour
 {
-    public void ToGame()
+    /*
+    0 - main
+    1 - game
+    2 - score
+    3 - exit
+    */
+
+    [SerializeField] GameObject ConfirmationBox;
+
+    public static void Open(int des)
     {
-        SceneManager.LoadScene(1);
+        if (des == 3)
+        {
+            Application.Quit();
+        }
+        else
+        {
+            SceneManager.LoadScene(des);
+        }
     }
 
-    public void ToMain()
+    public void OpenConfirm(int des)
     {
-        SceneManager.LoadScene(0);
+        ConfirmationBox?.SetActive(true);
+        ConfirmationBox?.SendMessage("SetDes", des);
     }
 
-    public void ExitGame()
+    public void CloseConfirm()
     {
-        Application.Quit();
+        ConfirmationBox?.SetActive(false);
     }
 }

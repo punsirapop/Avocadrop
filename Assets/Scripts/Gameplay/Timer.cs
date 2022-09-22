@@ -5,14 +5,16 @@ using TMPro;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI timeDisplay;
-    [SerializeField] List<GameObject> Buttons;
+    public static float timeCount = 0f;
 
-    float timeRemaining = 100f;
+    [SerializeField] TextMeshProUGUI timeDisplay, hiddenTimeDisplay;
+
+    float timeRemaining = 120f;
     bool isTimeRunning = false, isPrepared = false;
 
     private void OnEnable()
     {
+        timeCount = 0f;
         PhaseManager.OnPhaseChanged += HandlePhaseChanged;
     }
     private void OnDisable()
@@ -30,30 +32,30 @@ public class Timer : MonoBehaviour
         if(phase == Phase.PlayerAction && !isPrepared)
         {
             isTimeRunning = true;
-            PhaseManager.Instance.InvokeRepeating("RevealRequest", 0f, 5f);
+            PhaseManager.Instance.InvokeRepeating("RevealRequest", 0f, 20f);
             isPrepared = true;
-        }
-
-        if(phase == Phase.GameEnd)
-        {
-            foreach (GameObject button in Buttons)
-            {
-                button.SetActive(true);
-            }
         }
     }
 
     private void Update()
     {
+        if (timeRemaining < 0)
+        {
+            timeRemaining = 0;
+        }
         float minute = Mathf.FloorToInt(timeRemaining / 60);
         float second = Mathf.FloorToInt(timeRemaining % 60);
         timeDisplay.text = string.Format("{0:00}:{1:00}", minute, second);
+        float hMinute = Mathf.FloorToInt(timeCount / 60);
+        float hSecond = Mathf.FloorToInt(timeCount % 60);
+        hiddenTimeDisplay.text = "Time: " + string.Format("{0:00}:{1:00}", hMinute, hSecond);
 
         if (isTimeRunning)
         {
             if(timeRemaining > 1)
             {
                 timeRemaining -= Time.deltaTime;
+                timeCount += Time.deltaTime;
             }
             else
             {

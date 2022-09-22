@@ -5,6 +5,8 @@ using System;
 
 public class BoardState : MonoBehaviour
 {
+    [SerializeField] GameObject AvoCollection, MultiplierCollection, multiplier, HRerolling;
+
     public static BoardState Instance;
     public bool fallingDone;
     public const int n = 9;
@@ -22,15 +24,21 @@ public class BoardState : MonoBehaviour
     // stores the count of cells in the
     // largest connected component
 
-    public Camera cam;
-
     GameObject[][] gameState;
     public static int currentMatchCount;
     public static GameObject[] currentMatch = new GameObject[n*m];
     public static matchPattern currentPattern;
     public static int rainbowLeftToDrop = 0;
-
     public static int currentScore = 0;
+    public static int rotationSinceLastMatch = 0;
+    public static int xExplodeLeftTodo = 0;
+    public static int plusExplodeLeftTodo = 0;
+    public static bool isRerolling = false;
+    public static int currentStreak = 0;
+    public static float currentStreakBonus = 1;
+
+    public static float timeToGo;
+    float rerollInterval = 20f;
 
     public enum matchPattern
     {
@@ -117,9 +125,38 @@ public class BoardState : MonoBehaviour
 
     //}
 
+    private void FixedUpdate()
+    {
+        if (!PhaseManager.Instance.isGameEnded && Time.fixedTime >= timeToGo &&
+            PhaseManager.Instance.phase == Phase.PlayerAction)
+        {
+            // PhaseManager.Instance.PhaseChange(Phase.UpdateState);
+            Debug.Log("REROLL TEXT ON");
+            HRerolling.SetActive(true);
+            rerollBoard();
+            resetRerollTimer();
+        }
+    }
+
+    public void resetRerollTimer()
+    {
+        timeToGo = Time.fixedTime + rerollInterval;
+    }
+
+    void rerollBoard()
+    {
+        Debug.Log("Rerolled board");
+        currentStreak = 0;
+        currentStreakBonus = 1;
+        gameObject.GetComponent<Timer>().AddTime(-20f);
+        isRerolling = true;
+        PowerUpsManager.Instance.YeetusDeletus(2);
+    }
+
     private void Start()
     {
-        if(Instance == null)
+        resetRerollTimer();
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -140,23 +177,29 @@ public class BoardState : MonoBehaviour
     public IEnumerator explodeAllIfCan()
     {
         checkForMatchesAndDetectPatterns();
-        Debug.Log("Current Match amount: " + currentMatchCount);
         if (currentMatchCount >= 3)
         {
-            Debug.Log("Passed >= 3 check");
+            // reset timer for reroll and lock penalty
+            rotationSinceLastMatch = 0;
+            resetRerollTimer();
 
             while (currentMatchCount >= 3)
             {
+                int multiplier = calculateMultiplier();
+                Debug.Log("Multiplier: "+multiplier);
+                increaseStreak();
                 //explode this color match
                 yield return new WaitForSeconds(.5f);
                 // explode all from this match
                 for (int i = 0; i < currentMatchCount; i++)
                 {
-                    Debug.Log("Exxxplooooooooooooooooooooosion!!!!!!");
-                    currentMatch[i].GetComponent<Avocado>().isPartOfMatch = false;
-                    currentMatch[i].GetComponent<Avocado>().DeleteMe();
+                    if (currentMatch[i] != null)
+                    {
+                        currentMatch[i].GetComponent<Avocado>().isPartOfMatch = false;
+                        currentMatch[i].GetComponent<Avocado>().DeleteMe();
+                    }
                 }
-                giveScoreAndBonusForNumberOfMatch();
+                giveScoreAndBonusForNumberOfMatch(multiplier);
                 activateEffectForPattern();
 
 
@@ -168,8 +211,40 @@ public class BoardState : MonoBehaviour
         }
         else
         {
-            PhaseManager.Instance.PhaseChange(Phase.Revealing);
+            PhaseManager.Instance.PhaseChange(Phase.PreAction);
         }
+    }
+
+    public void increaseStreak()
+    {
+        currentStreak++;
+        currentStreakBonus = calculateBonusFromStreak();
+    }
+
+    public int calculateMultiplier()
+    {
+        int currentMultiplier = 1;
+        // check in match area all multiplier
+        // get positions of matches
+        for (int i = 0; i < currentMatchCount; i++)
+        {
+            if (currentMatch[i] != null)
+            {
+                Vector2 posToCheck = currentMatch[i].GetComponent<Transform>().position;
+                Debug.Log("Multiplier layer: " + LayerMask.GetMask("Multiplier"));
+                Collider2D multiplierFound = Physics2D.OverlapCircle(posToCheck, 0.1f, LayerMask.GetMask("Multiplier"));
+
+                if (multiplierFound)
+                {
+                    Debug.Log("Applying Multiplier.............................................................................................");
+                    currentMultiplier *= multiplierFound.gameObject.GetComponent<Multiplier>().multiplierAmount;
+                    // destroy used multiplier
+                    Destroy(multiplierFound.gameObject);
+
+                }
+            }
+        }
+         return currentMultiplier;
     }
 
     public void giveRainbow(int amount)
@@ -181,7 +256,53 @@ public class BoardState : MonoBehaviour
         int randomPowerIndex = UnityEngine.Random.Range(0,5);
         PowerUpsManager.Instance.getPowerUp(randomPowerIndex);
     }
-    public void giveScoreAndBonusForNumberOfMatch()
+
+    public void generateMultiplier(int round)
+    {
+        List<Vector2> validPos = getNonObstaclePos();
+        if (validPos.Count == 0) return;
+        for (int i = 0; i < round; i++)
+        {
+            int random = UnityEngine.Random.Range(0, validPos.Count);
+            Vector2 pos = validPos[random];
+            GameObject mul = Instantiate(multiplier, MultiplierCollection.transform);
+            validPos.RemoveAt(random);
+            mul.transform.position = pos;
+            int randomAmount = UnityEngine.Random.Range(2, 5);
+            mul.GetComponent<Multiplier>().setMultiplierAmount(randomAmount);
+        }
+    }
+
+    public List<Vector2> getNonObstaclePos()
+    {
+        List<Vector2> validPos = new List<Vector2>();
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                Debug.Log("--------------------------------------------------------------------------------------");
+                Debug.Log(i + "," + j);
+
+
+                Collider2D obstacleFound = Physics2D.OverlapCircle(new Vector2(i, j), 0.4f, LayerMask.GetMask("Obstacle"));
+                if (!obstacleFound)
+                {
+                    Collider2D multiplierFound = Physics2D.OverlapCircle(new Vector2(i, j), 0.4f, LayerMask.GetMask("Multiplier"));
+
+                    if (!multiplierFound)
+                    {
+                        Debug.Log("Found valid pos at " + i + "," + j);
+                        validPos.Add(new Vector2(i, j));
+                    }
+                    
+                }
+
+            }
+        }
+        return validPos;
+    }
+
+    public void giveScoreAndBonusForNumberOfMatch(int multiplier)
     {
         int score = 0;
         if (currentMatchCount == 3)
@@ -200,41 +321,51 @@ public class BoardState : MonoBehaviour
             giveManualPowerUp();
         }
 
-        currentScore += score;
+        gameObject.GetComponent<Timer>().AddTime(1f);
+        currentScore += (int)Math.Floor(score*multiplier* currentStreakBonus);
+    }
+
+    public float calculateBonusFromStreak()
+    {
+        float multiplierPerStreak = 0.02f;
+        return 1 + (multiplierPerStreak * currentStreak);
     }
 
     public void activateEffectForPattern()
     {
         if (currentPattern == matchPattern.square)
         {
-
+            gameObject.GetComponent<Timer>().AddTime(15f);
         }
         else if (currentPattern == matchPattern.cross)
         {
-
+            plusExplodeLeftTodo++;
         }
         else if (currentPattern == matchPattern.L_shape1 || currentPattern == matchPattern.L_shape2 || currentPattern == matchPattern.L_shape3 || currentPattern == matchPattern.L_shape4)
         {
-
+            xExplodeLeftTodo++;
         }
         else if (currentPattern == matchPattern.T_shape1 || currentPattern == matchPattern.T_shape2 || currentPattern == matchPattern.T_shape3 || currentPattern == matchPattern.T_shape4)
         {
-
+            TshapeEffect();
+            
         }
+    }
+
+    public void TshapeEffect()
+    {
+        generateMultiplier(4);
+
     }
 
     public void updateState()
     {
         int count = 0;
+
+        checkLock();
+
         //reset arrays
         gameState = ReturnRectangularGameObjectArray(9, 9);
-        //foreach (GameObject avocado in currentMatch)
-        //    {
-        //        if (avocado)
-        //        {
-        //            avocado.GetComponent<Avocado>().isPartOfMatch = false;
-        //        }
-        //    }
         currentMatch = new GameObject[n*m];
         for (int i = 0; i < n; i++)
         {
@@ -246,8 +377,6 @@ public class BoardState : MonoBehaviour
                 if (avocadoFound)
                 {
                     count++;
-                    Debug.Log(avocadoFound.gameObject.GetComponent<Transform>().position);
-                    //Debug.Log(avocadoFound.gameObject.GetComponent<Avocado>().color);
                     gameState[i][j] = avocadoFound.gameObject;
                 }
 
@@ -255,6 +384,26 @@ public class BoardState : MonoBehaviour
         }
 
 
+    }
+
+    public void checkLock()
+    {
+        int rotationUntilLock = 5;
+        if (rotationSinceLastMatch < rotationUntilLock) return;
+
+        bool found = false;
+        Avocado[] avos =  AvoCollection.GetComponentsInChildren<Avocado>();
+
+        while (!found)
+        {
+            int random = UnityEngine.Random.Range(0, avos.Length);
+            if (avos[random].gameObject.layer == 8)
+            {
+                found = true;
+                avos[random].lockMe();
+                rotationSinceLastMatch = 0;
+            }
+        }
     }
 
     public void checkForMatchesAndDetectPatterns()
@@ -280,7 +429,6 @@ public class BoardState : MonoBehaviour
         makeArrayForPatternSearch();
         foreach (matchPattern pattern in patternSizeDictionary.Keys)
         {
-            Debug.Log("Checking if match is "+pattern);
             if (isThisPattern(pattern))
             {
                 return pattern;
@@ -298,7 +446,6 @@ public class BoardState : MonoBehaviour
         {
             for (int j = 0; j <= m+2 - patternSizeDictionary[pattern]; j++)
             {
-                //Debug.Log(result[i][j]);
                 if (checkIfPatternAt(pattern,i, j))
                 {
                     return true;
@@ -354,18 +501,8 @@ public class BoardState : MonoBehaviour
     internal static bool noObstacle(int i, int j, Vector2 dir)
     {
         RaycastHit2D[] hits = Physics2D.RaycastAll(new Vector2(i,j), dir, 1f, LayerMask.GetMask("Obstacle"));
-
-        Debug.Log("--------------------------------------- laser hits ------------------------");
-        Debug.Log("at: " + i +", "+ j);
-        Debug.Log("hits amount: " + hits.Length);
-        Debug.Log("direction: " + dir);
-        foreach(RaycastHit2D hit in hits)
-        {
-            Debug.Log(hit.collider.gameObject.layer);
-        }
         if (hits.Length == 1 && hits[0].collider.gameObject.layer == 9)
         {
-            Debug.Log("hit obstacle!!!!!!!!!!!!!!!!!!");
             return false;
         }
         return true;
@@ -548,8 +685,6 @@ public class BoardState : MonoBehaviour
             }
         }
         currentMatchCount = current_max;
-        Debug.Log("The largest connected match of the grid is :" + current_max);
-        Debug.Log(bestColor);
 
     }
 

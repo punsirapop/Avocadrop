@@ -11,6 +11,7 @@ public class PowerUpsManager : MonoBehaviour
     [SerializeField] List<Transform> PUSpaces;
     [SerializeField] GameObject PUPrefab;
     [SerializeField] List<GameObject> PURanges;
+    [SerializeField] List<Sprite> PUSprites;
 
     Dictionary<Transform, GameObject> PUList = new Dictionary<Transform, GameObject>();
     private void Start()
@@ -38,6 +39,7 @@ public class PowerUpsManager : MonoBehaviour
             {
                 pair.Value.SetActive(true);
                 // pair.Value.transform.position = pair.Key.position;
+                pair.Value.GetComponent<SpriteRenderer>().sprite = PUSprites[index];
                 pair.Value.SendMessage("SetRange", PURanges[index]);
                 break;
             }
@@ -60,6 +62,20 @@ public class PowerUpsManager : MonoBehaviour
             
         }
         */
+    }
+
+
+
+    // dont call while avo's moving
+    // mode: 0 = plus, 1 = cross, 2 = whole
+    // receive pos from outside later
+    public void YeetusDeletus(int mode)
+    {
+        Vector2 pos = new Vector2(4, 4);
+        mode += 4;
+        PURanges[mode].transform.position = pos;
+        PURanges[mode].SetActive(true);
+        PURanges[mode].SendMessage("Explode");
     }
 
     /*

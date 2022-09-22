@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using TMPro;
+using System.Threading;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -12,13 +13,16 @@ public class PhaseManager : MonoBehaviour
     public bool isDropping = false;
     public Phase phase;
     public int doneDropCount = 0;
+    public bool isGameEnded = false;
+    public bool isPaused = false;
 
-    [SerializeField] GameObject AvoCollection;
+    [SerializeField] GameObject AvoCollection, PauseLid, GameCanvas, EndCanvas;
     [SerializeField] Transform Environment;
-    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, patternFoundDisplay, scoreDisplay;
+    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay,
+        patternFoundDisplay, scoreDisplay, hiddenScoreDisplay, endScoreDisplay, endTimeDisplay;
+
 
     Dictionary<Transform, int> avoDict = new Dictionary<Transform, int>();
-    bool isGameEnded = false;
     int revealRequest = 0;
 
     private void Awake()
@@ -39,31 +43,60 @@ public class PhaseManager : MonoBehaviour
 
     private void Update()
     {
-        currentPhaseDisplay.SetText("Current Phase: " + phase);
-        dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
-        patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
-        scoreDisplay.SetText("Score: " + BoardState.currentScore);
-
-        if (phase == Phase.PlayerAction)
+        if (isGameEnded && phase != Phase.GameEnd)
         {
-            if (isGameEnded)
-            {
-                PhaseChange(Phase.GameEnd);
-            }
+            PhaseChange(Phase.GameEnd);
+            // isGameEnded = false;
+        }
 
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
+        // currentPhaseDisplay.SetText("Current Phase: " + phase);
+        // dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
+        // patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
+        scoreDisplay.SetText(BoardState.currentScore.ToString());
+        hiddenScoreDisplay.SetText("Score: " + BoardState.currentScore.ToString());
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
+        if (isPaused)
+        {
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
+
+        if (phase == Phase.PlayerAction && !isPaused)
+        {
+            if (BoardState.xExplodeLeftTodo>0)
             {
+                BoardState.xExplodeLeftTodo--;
+                PowerUpsManager.Instance.YeetusDeletus(1);
+            }
+            else if (BoardState.plusExplodeLeftTodo > 0)
+            {
+                BoardState.plusExplodeLeftTodo--;
+                PowerUpsManager.Instance.YeetusDeletus(0);
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                BoardState.rotationSinceLastMatch++;
                 // Debug.Log("Changing Phase from PlayerAction");
                 StartCoroutine(RotateAndDrop(90f));
             }
             else if (Input.GetKeyUp(KeyCode.RightArrow))
             {
                 // Debug.Log("Changing Phase from PlayerAction");
+                BoardState.rotationSinceLastMatch++;
                 StartCoroutine(RotateAndDrop(-90f));
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
             {
                 // Debug.Log("Changing Phase from PlayerAction");
+                BoardState.rotationSinceLastMatch++;
                 StartCoroutine(RotateAndDrop(180f));
             }
         }
@@ -71,42 +104,49 @@ public class PhaseManager : MonoBehaviour
 
     public void PhaseChange(Phase newPhase)
     {
-        Debug.Log("=========== From Phase: "+ phase + " to Current Phase: " + newPhase + " ===========");
-        phase = newPhase;
-
-        switch (phase)
+        if(phase != Phase.GameEnd)
         {
-            case Phase.Preparation:
-                break;
-            case Phase.PlayerAction:
-                break;
-            case Phase.CheckExplode:
-                HandleCheckExplode();
-                break;
-            case Phase.Drop:
-                StartCoroutine(HandleDrop());
-                break;
-            case Phase.Spawn:
-                break;
-            case Phase.UpdateState:
-                StartCoroutine(HandleUpdateState());
-                break;
-            case Phase.GameEnd:
-                HandleGameEnd();
-                break;
-            case Phase.Revealing:
-                HandleRevealing();
-                break;
-            default:
-                break;
+            if (isGameEnded && phase != Phase.GameEnd)
+            {
+                newPhase = Phase.GameEnd;
+            }
+            Debug.Log("=========== From Phase: " + phase + " to Current Phase: " + newPhase + " ===========");
+            phase = newPhase;
+
+            switch (phase)
+            {
+                case Phase.Preparation:
+                    break;
+                case Phase.PlayerAction:
+                    break;
+                case Phase.CheckExplode:
+                    HandleCheckExplode();
+                    break;
+                case Phase.Drop:
+                    StartCoroutine(HandleDrop());
+                    break;
+                case Phase.Spawn:
+                    break;
+                case Phase.UpdateState:
+                    StartCoroutine(HandleUpdateState());
+                    break;
+                case Phase.GameEnd:
+                    HandleGameEnd();
+                    break;
+                case Phase.PreAction:
+                    HandlePreAction();
+                    break;
+                default:
+                    break;
+            }
+
+            OnPhaseChanged?.Invoke(newPhase);
         }
-        
-        OnPhaseChanged?.Invoke(newPhase);
     }
 
-    private void HandleRevealing()
+    private void HandlePreAction()
     {
-        MazeSpawner.Instance.Reveal(5 * revealRequest);
+        MazeSpawner.Instance.Reveal((revealRequest * 3) - MazeSpawner.Instance.revealedSoFar);
         PhaseChange(Phase.PlayerAction);
     }
 
@@ -172,6 +212,7 @@ public class PhaseManager : MonoBehaviour
 
     private IEnumerator HandleUpdateState()
     {
+        PauseLid.SetActive(false);
         yield return new WaitUntil(() => doneDropCount == SpawnManager.Instance.capacity);
         BoardState.Instance.updateState();
         PhaseChange(Phase.CheckExplode);
@@ -179,17 +220,31 @@ public class PhaseManager : MonoBehaviour
 
     private void HandleGameEnd()
     {
-        isGameEnded = true;
+        Debug.Log("HANDLING THE END");
+        endScoreDisplay.SetText(BoardState.currentScore.ToString());
+        float hMinute = Mathf.FloorToInt(Timer.timeCount / 60);
+        float hSecond = Mathf.FloorToInt(Timer.timeCount % 60);
+        endTimeDisplay.text = string.Format("{0:00}:{1:00}", hMinute, hSecond);
+        PauseLid.SetActive(true);
+        GameCanvas.SetActive(false);
+        EndCanvas.SetActive(true);
     }
 
     public void EndMe()
     {
+        Debug.Log("Initiate Summarization Sequence");
         isGameEnded = true;
     }
 
     public void RevealRequest()
     {
         revealRequest++;
+    }
+
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+        PauseLid.SetActive(isPaused);
     }
 
     /*
@@ -219,5 +274,5 @@ public enum Phase
     UpdateState,
     GameEnd,
     rotating,
-    Revealing
+    PreAction
 }
