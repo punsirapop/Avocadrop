@@ -5,24 +5,6 @@ using UnityEngine.EventSystems;
 
 public class Avocado : MonoBehaviour
 {
-    public Color color;
-    public bool pleaseDrop = false, isPartOfMatch;
-
-    GameObject fallingPoint;
-    Transform pointCollection;
-    public colorText colorEnum;
-    int isLock = 0;
-
-    [SerializeField] SpriteRenderer spriteRenderer;
-    [SerializeField] GameObject lockSprite, permLockSprite;
-
-    [SerializeField]
-    Gradient gradient;
-    float duration = 1.0f;
-    float t = 0f;
-
-    bool gradientIncreasing = true;
-
     public enum colorText
     {
         green,
@@ -34,9 +16,24 @@ public class Avocado : MonoBehaviour
         rainbow,
     }
 
+    public static List<colorText> colorList = new List<colorText>
+        { colorText.green, colorText.red, colorText.yellow , colorText.blue };
+
+    public Color color;
+    public bool pleaseDrop = false, isPartOfMatch;
+    public colorText colorEnum;
+
+    [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] GameObject lockSprite, permLockSprite;
+    [SerializeField] Gradient gradient;
+
+    int isLock = 0;
+    float duration = 1.0f;
+    float t = 0f;
+    bool gradientIncreasing = true;
+
     private void OnEnable()
     {
-        
         if (BoardState.rainbowLeftToDrop > 0)
         {
             colorEnum = colorText.rainbow;
@@ -56,8 +53,8 @@ public class Avocado : MonoBehaviour
 
     private colorText randomColor()
     {
-        List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow, colorText.blue, colorText.magenta, colorText.cyan };
-        //List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow,};
+        // List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow, colorText.blue, colorText.magenta, colorText.cyan };
+        // List<colorText> colorList = new List<colorText> { colorText.green, colorText.red, colorText.yellow,};
 
         int index = Random.Range(0, colorList.Count);
         //Debug.Log(colorList[index]);

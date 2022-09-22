@@ -18,7 +18,7 @@ public class PhaseManager : MonoBehaviour
 
     [SerializeField] GameObject AvoCollection, PauseLid, Guage, BackPause, GameCanvas, EndCanvas;
     [SerializeField] Transform Environment;
-    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay,
+    [SerializeField] TextMeshProUGUI currentPhaseDisplay, dropCountDisplay, revealedPortionDisplay,
         patternFoundDisplay, scoreDisplay, hiddenScoreDisplay, endScoreDisplay, endTimeDisplay;
 
 
@@ -52,6 +52,8 @@ public class PhaseManager : MonoBehaviour
         // currentPhaseDisplay.SetText("Current Phase: " + phase);
         // dropCountDisplay.SetText("Avocado Count: " + AvoCollection.transform.childCount);
         // patternFoundDisplay.SetText("Pattern Found: " + BoardState.currentPattern);
+        revealedPortionDisplay.SetText(MazeSpawner.Instance.revealedSoFar + "/"
+            + MazeSpawner.Instance.mazeCount + "\n" + MazeSpawner.Instance.revealedPortion + "/" + revealRequest);
         scoreDisplay.SetText(BoardState.currentScore.ToString());
         hiddenScoreDisplay.SetText("Score: " + BoardState.currentScore.ToString());
 
@@ -146,7 +148,9 @@ public class PhaseManager : MonoBehaviour
 
     private void HandlePreAction()
     {
-        MazeSpawner.Instance.Reveal((revealRequest * 3) - MazeSpawner.Instance.revealedSoFar);
+        int i = UnityEngine.Random.Range(3, 6);
+        MazeSpawner.Instance.Reveal(revealRequest * i);
+        revealRequest = 0;
         PhaseChange(Phase.PlayerAction);
     }
 

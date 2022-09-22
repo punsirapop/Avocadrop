@@ -13,6 +13,8 @@ public class MazeSpawner : MonoBehaviour
     int n = 9, m = 9, wallCount = 0;
 
     public int revealedSoFar = 0;
+    public int revealedPortion = 0;
+    public int mazeCount = 0;
 
     List<GameObject> visitedList = new List<GameObject>();
     List<GameObject> toVisitList = new List<GameObject>();
@@ -91,6 +93,7 @@ public class MazeSpawner : MonoBehaviour
         {
             childList.AddRange(t.Cast<Transform>().ToList());
         }
+        mazeCount = childList.Count;
         childList.RemoveAll(x => x.gameObject.activeSelf);
         Debug.Log(childList.Count);
 
@@ -181,15 +184,40 @@ public class MazeSpawner : MonoBehaviour
 
     public void Reveal(int num)
     {
-        revealedSoFar += num;
+        /*
+        revealedSoFar = mazeCount - (childList.Count - num);
+        revealedPortion = Mathf.RoundToInt((revealedSoFar / childList.Count) * 3);
+        */
+
         num = (num < childList.Count) ? num : childList.Count;
 
-        for (int i = 0; i < num; i++)
+        if(num > 0)
         {
-            int random = Random.Range(0, childList.Count);
-            childList[random].gameObject.SetActive(true);
-            childList.RemoveAt(random);
+            for (int i = 0; i < num; i++)
+            {
+                int random = Random.Range(0, childList.Count);
+                childList[random].gameObject.SetActive(true);
+                childList.RemoveAt(random);
+            }
         }
+
+        revealedSoFar += num;
+        revealedPortion = Mathf.RoundToInt(revealedSoFar * 3 / mazeCount);
+
+        switch (revealedPortion)
+        {
+            case 1:
+                if (!Avocado.colorList.Contains(Avocado.colorText.magenta))
+                    Avocado.colorList.Add(Avocado.colorText.magenta);
+                break;
+            case 2:
+                if (!Avocado.colorList.Contains(Avocado.colorText.cyan))
+                    Avocado.colorList.Add(Avocado.colorText.cyan);
+                break;
+            default:
+                break;
+        }
+        
     }
 
     /*
