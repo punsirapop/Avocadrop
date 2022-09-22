@@ -5,6 +5,24 @@ using UnityEngine.EventSystems;
 
 public class Avocado : MonoBehaviour
 {
+    public Color color;
+    public bool pleaseDrop = false, isPartOfMatch, aboutToExplode = false;
+
+    GameObject fallingPoint;
+    Transform pointCollection;
+    public colorText colorEnum;
+    int isLock = 0;
+
+    [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] GameObject lockSprite, permLockSprite;
+
+    [SerializeField]
+    Gradient gradient;
+    float duration = 1.0f;
+    float t = 0f;
+
+    bool gradientIncreasing = true;
+
     public enum colorText
     {
         green,
