@@ -26,7 +26,6 @@ public class BoardState : MonoBehaviour
 
     GameObject[][] gameState;
     public static int currentMatchCount;
-    public static Color currentColorMatch;
     public static GameObject[] currentMatch = new GameObject[n*m];
     public static matchPattern currentPattern;
     public static int rainbowLeftToDrop = 0;
@@ -186,7 +185,6 @@ public class BoardState : MonoBehaviour
 
             while (currentMatchCount >= 3)
             {
-                indicateExplosion();
                 int multiplier = calculateMultiplier();
                 Debug.Log("Multiplier: "+multiplier);
                 increaseStreak();
@@ -198,7 +196,6 @@ public class BoardState : MonoBehaviour
                     if (currentMatch[i] != null)
                     {
                         currentMatch[i].GetComponent<Avocado>().isPartOfMatch = false;
-                        currentMatch[i].GetComponent<Avocado>().aboutToExplode = false;
                         currentMatch[i].GetComponent<Avocado>().DeleteMe();
                     }
                 }
@@ -215,17 +212,6 @@ public class BoardState : MonoBehaviour
         else
         {
             PhaseManager.Instance.PhaseChange(Phase.PreAction);
-        }
-    }
-
-    public void indicateExplosion()
-    {
-        for (int i = 0; i < currentMatchCount; i++)
-        {
-            if (currentMatch[i] != null)
-            {
-                currentMatch[i].GetComponent<Avocado>().aboutToExplode = true;
-            }
         }
     }
 
@@ -698,7 +684,6 @@ public class BoardState : MonoBehaviour
                 }
             }
         }
-        currentColorMatch = bestColor;
         currentMatchCount = current_max;
 
     }
