@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class Avocado : MonoBehaviour
 {
     public Color color;
-    public bool pleaseDrop = false, isPartOfMatch;
+    public bool pleaseDrop = false, isPartOfMatch, aboutToExplode = false;
 
     GameObject fallingPoint;
     Transform pointCollection;
