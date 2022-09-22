@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using TMPro;
 using System.Threading;
+using static UnityEditor.PlayerSettings;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PhaseManager : MonoBehaviour
     public int doneDropCount = 0;
     public bool isGameEnded = false;
     public bool isPaused = false;
+    public int lockedAvo = 0;
 
     [SerializeField] GameObject AvoCollection, PauseLid, GameCanvas, EndCanvas;
     [SerializeField] Transform Environment;
@@ -146,7 +148,9 @@ public class PhaseManager : MonoBehaviour
 
     private void HandlePreAction()
     {
-        MazeSpawner.Instance.Reveal((revealRequest * 3) - MazeSpawner.Instance.revealedSoFar);
+        int i = UnityEngine.Random.Range(2, 5);
+        MazeSpawner.Instance.Reveal(revealRequest * i);
+        revealRequest = 0;
         PhaseChange(Phase.PlayerAction);
     }
 
@@ -214,7 +218,34 @@ public class PhaseManager : MonoBehaviour
     {
         PauseLid.SetActive(false);
         yield return new WaitUntil(() => doneDropCount == SpawnManager.Instance.capacity);
+
+        if (BoardState.isRerolling)
+        {
+            BoardState.isRerolling = false;
+
+            int LA = 0;
+
+            while (LA < lockedAvo)
+            {
+                bool found = false;
+
+                Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + LA + "/" + lockedAvo
+                + "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+                int random = UnityEngine.Random.Range(0, AvoCollection.transform.childCount);
+                if (AvoCollection.transform.GetChild(random).GetComponent<Avocado>().isLock == 0)
+                {
+                    found = true;
+                    AvoCollection.transform.GetChild(random).GetChild(0).gameObject.SetActive(true);
+                    AvoCollection.transform.GetChild(random).GetComponent<Avocado>().isLock = 1;
+                    LA++;
+                }
+            }
+            
+        }
+
         BoardState.Instance.updateState();
+
         PhaseChange(Phase.CheckExplode);
     }
 
