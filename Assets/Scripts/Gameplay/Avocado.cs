@@ -16,8 +16,7 @@ public class Avocado : MonoBehaviour
         rainbow,
     }
 
-    public static List<colorText> colorList = new List<colorText>
-        { colorText.green, colorText.red, colorText.yellow , colorText.blue };
+    public static List<colorText> colorList;
 
     public Color color;
     public bool pleaseDrop = false, isPartOfMatch, aboutToExplode = false;

@@ -15,8 +15,10 @@ public class Timer : MonoBehaviour
     private void OnEnable()
     {
         timeCount = 0f;
+        isPrepared = false;
         PhaseManager.OnPhaseChanged += HandlePhaseChanged;
     }
+
     private void OnDisable()
     {
         PhaseManager.OnPhaseChanged -= HandlePhaseChanged;

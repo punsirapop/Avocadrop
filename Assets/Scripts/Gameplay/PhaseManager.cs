@@ -4,8 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using TMPro;
-using System.Threading;
-using static UnityEditor.PlayerSettings;
+using static Avocado;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -38,6 +37,8 @@ public class PhaseManager : MonoBehaviour
     private void Start()
     {
         // Debug.Log("Changing Phase from Start");
+        Avocado.colorList = new List<Avocado.colorText>
+            { colorText.green, colorText.red, colorText.yellow , colorText.blue };
         BoardState.currentScore = 0;
         PhaseChange(Phase.Preparation);
         Time.timeScale = 1f;
